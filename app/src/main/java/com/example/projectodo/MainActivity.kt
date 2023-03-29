@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         val loadingIntent: Intent = Intent(this, LoadingActivity::class.java)
         startActivity(loadingIntent)
 
+        // 프로젝트 추가 버튼 이벤트 처리(새창)
         binding.addBtn.setOnClickListener{
             val addIntent: Intent = Intent(this, AddActivity::class.java)
             startActivity(addIntent)

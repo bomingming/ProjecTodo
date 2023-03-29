@@ -6,4 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".AddActivity">
 
+    <EditText
+        android:id="@+id/title_edit"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="30dp"
+        android:inputType="text"
+        android:textCursorDrawable="@color/lightpink"
+        android:backgroundTint="@color/lightpink"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
