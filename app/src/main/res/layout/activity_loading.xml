@@ -30,7 +30,7 @@
             android:textColor="@color/black"
             android:layout_marginTop="30dp"
             android:layout_gravity="center"
-            android:fontFamily="@font/kimpo"
+            android:fontFamily="@font/ganpan"
             android:textStyle="bold"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
