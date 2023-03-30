@@ -18,4 +18,28 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="30dp"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_btn"
+        android:background="@drawable/rectangle_style">
+
+        <TextView
+            android:id="@+id/proj_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="프로젝트 예시"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/proj_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내용 예시"
+            app:layout_constraintTop_toBottomOf="@+id/proj_title"
+            app:layout_constraintStart_toStartOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
