@@ -132,7 +132,17 @@
                 android:textCursorDrawable="@color/lightpink"
                 android:backgroundTint="@color/lightpink"
                 android:inputType="text"/>
+
             <ImageButton
+                android:id="@+id/delete_todo_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/delete_todo_icon"
+                app:layout_constraintStart_toEndOf="@+id/todo_list"
+                app:layout_constraintTop_toTopOf="@+id/todo_list" />
+            <ImageButton
+                android:id="@+id/delete_target_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
