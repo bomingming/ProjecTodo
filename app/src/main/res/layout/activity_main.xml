@@ -20,18 +20,21 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="300dp"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_style"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_btn"
-        android:background="@drawable/rectangle_style">
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/proj_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="프로젝트 제목"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="40dp"
             android:fontFamily="@font/kimpo"
+            android:text="프로젝트 제목"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
@@ -39,23 +42,49 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
+            android:id="@+id/progressBar"
             style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="10dp"
             android:max="100"
             android:progress="50"
             android:progressDrawable="@drawable/progressbar_style"
-            android:layout_marginStart="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/proj_title"
-            app:layout_constraintStart_toEndOf="@+id/proj_title"
-            app:layout_constraintTop_toTopOf="@+id/proj_title" />
+            app:layout_constraintStart_toStartOf="@+id/proj_title"
+            app:layout_constraintTop_toBottomOf="@+id/proj_title"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/progress_per"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/kimpo"
+            android:text="50%"
+            android:textSize="8dp"
+            app:layout_constraintStart_toEndOf="@+id/progressBar"
+            app:layout_constraintTop_toTopOf="@+id/progressBar"
+            android:layout_marginStart="10dp"/>
+
         <TextView
             android:id="@+id/proj_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:text="프로젝트 기간"
-            app:layout_constraintTop_toBottomOf="@+id/proj_title"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="@+id/proj_title"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
+        <TextView
+            android:id="@+id/proj_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/kimpo"
+            android:text="2022.10.05 ~ 2023.02.06"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/proj_detail"
+            app:layout_constraintTop_toBottomOf="@+id/proj_detail"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="30dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
