@@ -132,8 +132,14 @@
                 android:textCursorDrawable="@color/lightpink"
                 android:backgroundTint="@color/lightpink"
                 android:inputType="text"/>
-
-
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/delete_target_icon"
+                app:layout_constraintStart_toEndOf="@+id/target_title"
+                app:layout_constraintTop_toTopOf="@+id/target_title"
+                android:layout_marginStart="8dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <LinearLayout
