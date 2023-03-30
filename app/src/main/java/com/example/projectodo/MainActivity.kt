@@ -20,5 +20,10 @@ class MainActivity : AppCompatActivity() {
             val addIntent: Intent = Intent(this, AddActivity::class.java)
             startActivity(addIntent)
         }
+
+        binding.block.setOnClickListener{
+            val detailIntent: Intent = Intent(this, DetailActivity::class.java)
+            startActivity(detailIntent)
+        }
     }
 }

@@ -19,6 +19,7 @@
         android:layout_marginRight="30dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/block"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:background="@drawable/rectangle_style"
