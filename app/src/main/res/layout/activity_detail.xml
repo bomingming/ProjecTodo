@@ -79,5 +79,49 @@
         app:layout_constraintTop_toTopOf="@+id/progressBar_detail"
         android:layout_marginStart="10dp"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/block_target"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_style"
+        app:layout_constraintStart_toStartOf="@+id/title_text"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_detail"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:id="@+id/target_title_Block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/kimpo"
+            android:text="목표 이름"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/todo_check_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/target_title_Block"
+            app:layout_constraintTop_toBottomOf="@+id/target_title_Block" />
+
+        <TextView
+            android:id="@+id/todo_list_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/kimpo"
+            android:text="일정 1"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/todo_check_block"
+            app:layout_constraintStart_toEndOf="@+id/todo_check_block"
+            app:layout_constraintTop_toBottomOf="@+id/target_title_Block" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
