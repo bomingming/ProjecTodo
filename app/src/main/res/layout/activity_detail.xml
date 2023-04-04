@@ -92,7 +92,6 @@
         app:layout_constraintStart_toEndOf="@+id/progress_per_detail"
         app:layout_constraintTop_toTopOf="@+id/progress_per_detail" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/block_target"
         android:layout_width="350dp"
@@ -135,8 +134,6 @@
             app:layout_constraintStart_toEndOf="@+id/todo_check_block"
             app:layout_constraintTop_toBottomOf="@+id/target_title_Block" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -62,12 +62,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/kimpo"
-                android:text="~"
+                android:text="  ~  "
                 android:textColor="@color/black"
-                android:textSize="60dp"
+                android:textSize="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/start_date_btn" />
+
+            <TextView
+                android:id="@+id/start_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kimpo"
+                android:text="---"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tilde_text"
+                app:layout_constraintEnd_toStartOf="@+id/tilde_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tilde_text" />
+
+            <TextView
+                android:id="@+id/end_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kimpo"
+                android:text="---"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tilde_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tilde_text"
+                app:layout_constraintTop_toTopOf="@+id/tilde_text" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
