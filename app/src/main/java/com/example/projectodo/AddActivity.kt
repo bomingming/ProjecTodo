@@ -40,10 +40,18 @@ class AddActivity : AppCompatActivity() {
 
         // 등록 버튼 클릭 이벤트
         binding.regisBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
             Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show()
             finish() // 등록 화면 종료
         }
 
+        // 취소 버튼 클릭 이벤트
+        binding.cancelBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("취소하시겠습니까?").setPositiveButton("확인", DialogInterface.OnClickListener{dialog, which ->
+                Toast.makeText(this, "등록이 취소되었습니다", Toast.LENGTH_SHORT).show()
+                finish()
+            }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
+            builder.show()
+        }
     }
 }
