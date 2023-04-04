@@ -1,8 +1,11 @@
 package com.example.projectodo
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.projectodo.databinding.ActivityAddBinding
 import java.util.Calendar
 
@@ -34,5 +37,13 @@ class AddActivity : AppCompatActivity() {
             }
             DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
         }
+
+        // 등록 버튼 클릭 이벤트
+        binding.regisBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show()
+            finish() // 등록 화면 종료
+        }
+
     }
 }

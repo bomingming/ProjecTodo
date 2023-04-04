@@ -12,5 +12,10 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+    </style>
+    <!--DatePicker 테마 설정-->
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.DatePicker">
+        <item name="android:headerBackground">@color/lightpink</item>
     </style>
 </resources>
