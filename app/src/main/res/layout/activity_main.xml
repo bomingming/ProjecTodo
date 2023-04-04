@@ -43,7 +43,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/progressBar_main"
             style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="150dp"
             android:layout_height="10dp"
@@ -55,14 +55,14 @@
             android:layout_marginTop="10dp"/>
 
         <TextView
-            android:id="@+id/progress_per"
+            android:id="@+id/progress_per_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/kimpo"
             android:text="50%"
             android:textSize="8dp"
-            app:layout_constraintStart_toEndOf="@+id/progressBar"
-            app:layout_constraintTop_toTopOf="@+id/progressBar"
+            app:layout_constraintStart_toEndOf="@+id/progressBar_main"
+            app:layout_constraintTop_toTopOf="@+id/progressBar_main"
             android:layout_marginStart="10dp"/>
 
         <TextView
@@ -73,7 +73,7 @@
             android:text="프로젝트 기간"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="@+id/proj_title"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+            app:layout_constraintTop_toBottomOf="@+id/progressBar_main" />
 
         <TextView
             android:id="@+id/proj_date"
