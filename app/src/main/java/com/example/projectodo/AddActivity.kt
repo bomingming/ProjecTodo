@@ -18,7 +18,7 @@ class AddActivity : AppCompatActivity() {
         var startDateString = "" // 시작일
         var endDateString = "" // 마감일
 
-        // 시작일 버튼 클릭 이벤트
+        // 시작일 버튼 이벤트
         binding.startDateBtn.setOnClickListener {
             val cal = Calendar.getInstance()
             val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
@@ -28,7 +28,7 @@ class AddActivity : AppCompatActivity() {
             DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
         }
 
-        // 마감일 버튼 클릭 이벤트
+        // 마감일 버튼 이벤트
         binding.endDateBtn.setOnClickListener {
             val cal = Calendar.getInstance()
             val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
@@ -38,13 +38,13 @@ class AddActivity : AppCompatActivity() {
             DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
         }
 
-        // 등록 버튼 클릭 이벤트
+        // 등록 버튼 이벤트
         binding.regisBtn.setOnClickListener {
             Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show()
             finish() // 등록 화면 종료
         }
 
-        // 취소 버튼 클릭 이벤트
+        // 취소 버튼 이벤트
         binding.cancelBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("취소하시겠습니까?").setPositiveButton("확인", DialogInterface.OnClickListener{dialog, which ->
@@ -53,5 +53,16 @@ class AddActivity : AppCompatActivity() {
             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
             builder.show()
         }
+
+        // 목표 삭제 버튼 이벤트
+        binding.deleteTargetBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
+                // 목표 삭제 이벤트 구현 필요
+            })
+                .setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
+        }
+
+
     }
 }
