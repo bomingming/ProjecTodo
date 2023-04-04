@@ -17,5 +17,6 @@
     <!--DatePicker 테마 설정-->
     <style name="MyDatePickerStyle" parent="@android:style/Widget.DatePicker">
         <item name="android:headerBackground">@color/lightpink</item>
+        <item name="android:datePickerMode">calendar</item>
     </style>
 </resources>
