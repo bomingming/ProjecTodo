@@ -47,7 +47,7 @@ class AddActivity : AppCompatActivity() {
         // 취소 버튼 이벤트
         binding.cancelBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setMessage("취소하시겠습니까?").setPositiveButton("확인", DialogInterface.OnClickListener{dialog, which ->
+            builder.setMessage("프로젝트 등록을 취소하시겠습니까?").setPositiveButton("확인", DialogInterface.OnClickListener{dialog, which ->
                 Toast.makeText(this, "등록이 취소되었습니다", Toast.LENGTH_SHORT).show()
                 finish()
             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
@@ -59,10 +59,17 @@ class AddActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
                 // 목표 삭제 이벤트 구현 필요
-            })
-                .setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
+            }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
+            builder.show()
         }
-
-
+        
+        // 일정 삭제 버튼 이벤트
+        binding.deleteTodoBtn.setOnClickListener { 
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("일정을 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which -> 
+                // 일정 삭제 이벤트 구현 필요
+            }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
+            builder.show()
+        }
     }
 }
