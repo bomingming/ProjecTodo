@@ -2,6 +2,7 @@ package com.example.projectodo
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -27,6 +28,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 삭제 버튼 이벤트
         binding.deleteBtn.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage("프로젝트를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
@@ -37,7 +40,13 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
             builder.show()
         }
+
+        // 편집 버튼 이벤트
+        binding.editBtn.setOnClickListener {
+            val intent : Intent = Intent(requireContext(), EditActivity::class.java)
+            startActivity(intent)
+            // BottomSheet는 종료
+            dismiss()
+        }
     }
-
-
 }
