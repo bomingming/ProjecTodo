@@ -32,6 +32,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             builder.setMessage("프로젝트를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
                 // BottomSheet 종료
                 dismiss()
+                // 토스트 메시지로 삭제 완료 알림
+                Toast.makeText(requireContext(), "프로젝트가 삭제되었습니다",Toast.LENGTH_SHORT).show()
             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
             builder.show()
         }
