@@ -41,7 +41,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             builder.show()
         }
 
-        // 편집 버튼 이벤트
+        // 수정 버튼 이벤트
         binding.editBtn.setOnClickListener {
             val intent : Intent = Intent(requireContext(), EditActivity::class.java)
             startActivity(intent)
