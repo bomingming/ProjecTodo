@@ -5,6 +5,8 @@ import android.app.DatePickerDialog
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.example.projectodo.databinding.ActivityAddBinding
 import java.util.Calendar
@@ -40,8 +42,24 @@ class AddActivity : AppCompatActivity() {
 
         // 등록 버튼 이벤트
         binding.regisBtn.setOnClickListener {
+            val parentLayout = R.id.block_layout
+
+            val inflater = LayoutInflater.from(this)
+            val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
+
+            val linearLayout = findViewById<LinearLayout>(R.id.block_layout)
+
+            // margin을 설정하기 위한 파라미터 선언
+            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutParams.setMargins(0, 10, 0, 40)
+            view.layoutParams = layoutParams
+
+            linearLayout.addView(view)
+            // parentLayout.addView(view)
+
             Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show()
             finish() // 등록 화면 종료
+
         }
 
         // 취소 버튼 이벤트

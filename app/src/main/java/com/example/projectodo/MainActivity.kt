@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(detailIntent)
         }
 
-        val parentLayout = binding.blockLayout
+        /*val parentLayout = binding.blockLayout
 
         binding.addBtn.setOnClickListener {
             val inflater = LayoutInflater.from(this)
@@ -40,6 +40,6 @@ class MainActivity : AppCompatActivity() {
             view.layoutParams = layoutParams
 
             parentLayout.addView(view)
-        }
+        }*/
     }
 }
