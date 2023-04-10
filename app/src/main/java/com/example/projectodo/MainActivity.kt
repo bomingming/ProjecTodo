@@ -22,12 +22,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(addIntent)
         }*/
 
-        binding.block.setOnClickListener{
+        /*binding.block_layout.setOnClickListener{
             val detailIntent: Intent = Intent(this, DetailActivity::class.java)
             startActivity(detailIntent)
-        }
+        }*/
 
-        val parentLayout = binding.block
+        val parentLayout = binding.blockLayout
 
         binding.addBtn.setOnClickListener {
             val inflater = LayoutInflater.from(this)
