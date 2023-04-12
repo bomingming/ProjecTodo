@@ -1,10 +1,13 @@
 package com.example.projectodo
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -12,6 +15,8 @@ import com.example.projectodo.databinding.ActivityAddBinding
 import java.util.Calendar
 
 class AddActivity : AppCompatActivity() {
+    // private lateinit var blockLayout : LinearLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityAddBinding.inflate(layoutInflater)
@@ -42,24 +47,14 @@ class AddActivity : AppCompatActivity() {
 
         // 등록 버튼 이벤트
         binding.regisBtn.setOnClickListener {
-            val parentLayout = R.id.block_layout
+            val result = "프로젝트 블록 추가"
+            val intent = Intent()
 
-            val inflater = LayoutInflater.from(this)
-            val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
+            intent.putExtra("프로젝트 등록", result)
+            setResult(Activity.RESULT_OK, intent)
+            Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show() // 토스트 메시지 출력
 
-            val linearLayout = findViewById<LinearLayout>(R.id.block_layout)
-
-            // margin을 설정하기 위한 파라미터 선언
-            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            layoutParams.setMargins(0, 10, 0, 40)
-            view.layoutParams = layoutParams
-
-            linearLayout.addView(view)
-            // parentLayout.addView(view)
-
-            Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show()
             finish() // 등록 화면 종료
-
         }
 
         // 취소 버튼 이벤트
@@ -67,6 +62,7 @@ class AddActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("프로젝트 등록을 취소하시겠습니까?").setPositiveButton("확인", DialogInterface.OnClickListener{dialog, which ->
                 Toast.makeText(this, "등록이 취소되었습니다", Toast.LENGTH_SHORT).show()
+                setResult(Activity.RESULT_CANCELED) // 취소 버튼을 눌렀음을 저장
                 finish()
             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
             builder.show()
