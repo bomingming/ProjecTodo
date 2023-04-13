@@ -25,6 +25,8 @@ class AddActivity : AppCompatActivity() {
         var startDateString = "" // 시작일
         var endDateString = "" // 마감일
 
+        var projectTitle = "" // 프로젝트 제목
+
         // 시작일 버튼 이벤트
         binding.startDateBtn.setOnClickListener {
             val cal = Calendar.getInstance()
@@ -50,6 +52,9 @@ class AddActivity : AppCompatActivity() {
             val result = "프로젝트 블록 추가"
             val intent = Intent()
 
+            // 프로젝트 제목 입력값을 넘겨줌
+            intent.putExtra("프로젝트 제목", binding.titleEdit.text.toString())
+            // 프로젝트 등록 여부 넘겨줌
             intent.putExtra("프로젝트 등록", result)
             setResult(Activity.RESULT_OK, intent)
             Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show() // 토스트 메시지 출력
