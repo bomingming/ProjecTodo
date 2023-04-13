@@ -59,6 +59,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/kimpo"
         android:text="2022.10.05 ~ 2023.02.06"
+        android:textSize="13dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/proj_detail"
         app:layout_constraintTop_toBottomOf="@+id/proj_detail"

@@ -18,7 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var launcher : ActivityResultLauncher<Intent>
     
     // 동적으로 추가되는 뷰 내부의 텍스트 뷰의 참조 변수
-    private var dynamicTextView : TextView? = null
+    private var dynamicTitle : TextView? = null // 프로젝트 제목
+    private var dynamicDate : TextView? = null // 프로젝트 기간
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
                 val data = result.data
                 val addedView = data?.getStringExtra("프로젝트 등록")
                 val projTitle = data?.getStringExtra("프로젝트 제목")
+                val projDate = data?.getStringExtra("프로젝트 기간")
 
                 val parentLayout = binding.blockLayout // 레이아웃 객체 연결
                 val inflater = LayoutInflater.from(this)
@@ -62,12 +64,16 @@ class MainActivity : AppCompatActivity() {
                     parentLayout.addView(view)
 
                     // 추가된 블록의 텍스트 뷰 참조 변수 초기화
-                    dynamicTextView = view.findViewById(R.id.proj_title)
+                    dynamicTitle = view.findViewById(R.id.proj_title)
+                    dynamicDate = view.findViewById(R.id.proj_date)
                 }
 
                 // 동적 뷰 내부 텍스트 뷰 수정
                 projTitle?.let{value ->
-                    dynamicTextView?.text = value
+                    dynamicTitle?.text = value
+                }
+                projDate?.let { value->
+                    dynamicDate?.text = value
                 }
             }
         }

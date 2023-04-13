@@ -54,6 +54,9 @@ class AddActivity : AppCompatActivity() {
 
             // 프로젝트 제목 입력값을 넘겨줌
             intent.putExtra("프로젝트 제목", binding.titleEdit.text.toString())
+            // 프로젝트 기간 값을 넘겨줌
+            intent.putExtra("프로젝트 기간", binding.startDateText.text.toString()+"~"+binding.endDateText.text.toString())
+
             // 프로젝트 등록 여부 넘겨줌
             intent.putExtra("프로젝트 등록", result)
             setResult(Activity.RESULT_OK, intent)
