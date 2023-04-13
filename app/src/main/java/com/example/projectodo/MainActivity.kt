@@ -47,8 +47,7 @@ class MainActivity : AppCompatActivity() {
             if(result.resultCode == Activity.RESULT_OK){ // 등록 버튼이 눌러진 경우
                 val data = result.data
                 val addedView = data?.getStringExtra("프로젝트 등록")
-
-                val testDataExtra = data?.getStringExtra("프로젝트 제목")
+                val projTitle = data?.getStringExtra("프로젝트 제목")
 
                 val parentLayout = binding.blockLayout // 레이아웃 객체 연결
                 val inflater = LayoutInflater.from(this)
@@ -66,8 +65,8 @@ class MainActivity : AppCompatActivity() {
                     dynamicTextView = view.findViewById(R.id.proj_title)
                 }
 
-                // 동적 뷰 내부 텍스트 뷰 수정 시도
-                testDataExtra?.let{value ->
+                // 동적 뷰 내부 텍스트 뷰 수정
+                projTitle?.let{value ->
                     dynamicTextView?.text = value
                 }
             }
