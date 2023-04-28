@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -79,7 +80,7 @@ class AddActivity : AppCompatActivity() {
         }
 
         // 목표 삭제 버튼 이벤트
-        binding.deleteTargetBtn.setOnClickListener {
+        /*binding.deleteTargetBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
                 // 목표 삭제 이벤트 구현 필요
@@ -94,9 +95,25 @@ class AddActivity : AppCompatActivity() {
                 // 일정 삭제 이벤트 구현 필요
             }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
             builder.show()
+        }*/
+
+        val parentLayout = binding.targetLayout // 목표 레이아웃 객체 연결
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.target_block, null)
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
+        // 동적으로 뷰 추가
+        binding.targetBtn.setOnClickListener {
+            layoutParams.setMargins(0, 0, 0, 30)
+            view.layoutParams = layoutParams
+
+            // 부모를 이미 지정한 경우 초기화
+            if(view.parent != null){
+                (view.parent as ViewGroup).removeView(view)
+            }
+            parentLayout.addView(view)
+            Log.e("뷰 추가함","추가");
         }
-
-
 
     }
 }
