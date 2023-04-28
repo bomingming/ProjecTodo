@@ -19,8 +19,6 @@ import com.example.projectodo.databinding.ActivityAddBinding
 import java.util.Calendar
 
 class AddActivity : AppCompatActivity() {
-    // 목표 블록의 inflater를 클래스 변수로 선언
-    private lateinit var targetView : View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,13 +98,13 @@ class AddActivity : AppCompatActivity() {
             builder.show()
         }*/
 
-        /*val parentLayout = binding.targetLayout // 목표 레이아웃 객체 연결
-        val inflater = LayoutInflater.from(this)
-        val view = inflater.inflate(R.layout.target_block, null)
-        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-
         // 동적으로 뷰 추가
         binding.targetBtn.setOnClickListener {
+            val parentLayout = binding.targetLayout // 목표 레이아웃 객체 연결
+            val inflater = LayoutInflater.from(this)
+            val view = inflater.inflate(R.layout.target_block, null)
+            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
             layoutParams.setMargins(0, 0, 0, 30)
             view.layoutParams = layoutParams
 
@@ -115,26 +113,6 @@ class AddActivity : AppCompatActivity() {
                 (view.parent as ViewGroup).removeView(view)
             }
             parentLayout.addView(view)
-        }*/
-        /*val parentLayout = binding.targetLayout // 목표 레이아웃 객체 연결
-        val inflater = LayoutInflater.from(this)
-        val targetView = inflater.inflate(R.layout.target_block, null)
-        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)*/
-
-        // 동적으로 뷰 추가
-        binding.targetBtn.setOnClickListener {
-            val parentLayout = binding.targetLayout // 목표 레이아웃 객체 연결
-            val inflater = LayoutInflater.from(this)
-            val targetView = inflater.inflate(R.layout.target_block, null)
-            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            layoutParams.setMargins(0, 0, 0, 0)
-            targetView.layoutParams = layoutParams
-
-            // 부모를 이미 지정한 경우 초기화
-            if(targetView.parent != null){
-                (targetView.parent as ViewGroup).removeView(targetView)
-            }
-            parentLayout.addView(targetView)
         }
     }
 }
