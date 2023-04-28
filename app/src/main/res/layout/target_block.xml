@@ -16,7 +16,7 @@
         android:inputType="text"
         android:textCursorDrawable="@color/lightpink"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
         android:id="@+id/button"

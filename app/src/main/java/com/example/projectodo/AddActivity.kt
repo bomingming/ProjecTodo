@@ -11,11 +11,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.projectodo.databinding.ActivityAddBinding
 import java.util.Calendar
 
 class AddActivity : AppCompatActivity() {
-    // private lateinit var blockLayout : LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +26,8 @@ class AddActivity : AppCompatActivity() {
         var startDateString = "" // 시작일
         var endDateString = "" // 마감일
 
-        var projectTitle = "" // 프로젝트 제목
+        // 동적 뷰 관련 변수
+
 
         // 시작일 버튼 이벤트
         binding.startDateBtn.setOnClickListener {
@@ -93,5 +95,8 @@ class AddActivity : AppCompatActivity() {
             }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
             builder.show()
         }
+
+
+
     }
 }
