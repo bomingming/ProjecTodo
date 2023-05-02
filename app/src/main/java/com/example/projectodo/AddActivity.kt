@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -98,21 +99,33 @@ class AddActivity : AppCompatActivity() {
             builder.show()
         }*/
 
-        // 동적으로 뷰 추가
+        // 목표 추가 버튼 이벤트
         binding.targetBtn.setOnClickListener {
-            val parentLayout = binding.targetLayout // 목표 레이아웃 객체 연결
-            val inflater = LayoutInflater.from(this)
-            val view = inflater.inflate(R.layout.target_block, null)
-            val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            addTarget(binding.targetLayout)
+        }
+    }
 
-            layoutParams.setMargins(0, 0, 0, 30)
-            view.layoutParams = layoutParams
+    // 동적으로 목표 블록 추가하는 함수
+    fun addTarget(viewGroup: ViewGroup) {
+        val parentLayout = findViewById<LinearLayout>(R.id.target_layout) // 목표 레이아웃 객체 연결
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.target_block, null)
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
-            // 부모를 이미 지정한 경우 초기화
-            if(view.parent != null){
-                (view.parent as ViewGroup).removeView(view)
-            }
-            parentLayout.addView(view)
+        layoutParams.setMargins(0, 0, 0, 30)
+        view.layoutParams = layoutParams
+
+        // 부모를 이미 지정한 경우 초기화
+        if(view.parent != null){
+            (view.parent as ViewGroup).removeView(view)
+        }
+        parentLayout.addView(view)
+
+        val deleteTartgetBtn = view.findViewById<ImageButton>(R.id.delete_target_btn)
+        deleteTartgetBtn.setOnClickListener {
+            Log.e("삭제 버튼","눌림")
+            //viewGroup.removeView(view.parent as View)
+            (view.parent as ViewGroup).removeView(view)
         }
     }
 }
