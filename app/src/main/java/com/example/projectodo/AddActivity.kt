@@ -81,15 +81,7 @@ class AddActivity : AppCompatActivity() {
             builder.show()
         }
 
-        // 목표 삭제 버튼 이벤트
-        /*binding.deleteTargetBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
-                // 목표 삭제 이벤트 구현 필요
-            }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
-            builder.show()
-        }
-        
+        /*
         // 일정 삭제 버튼 이벤트
         binding.deleteTodoBtn.setOnClickListener { 
             val builder = AlertDialog.Builder(this)
