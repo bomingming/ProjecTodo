@@ -111,6 +111,7 @@ class AddActivity : AppCompatActivity() {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.target_block, null)
         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        val deleteTartgetBtn = view.findViewById<ImageButton>(R.id.delete_target_btn) // 목표 삭제 버튼 객체
 
         layoutParams.setMargins(0, 0, 0, 30)
         view.layoutParams = layoutParams
@@ -119,13 +120,15 @@ class AddActivity : AppCompatActivity() {
         if(view.parent != null){
             (view.parent as ViewGroup).removeView(view)
         }
-        parentLayout.addView(view)
+        parentLayout.addView(view) // 목표 블록 추가
 
-        val deleteTartgetBtn = view.findViewById<ImageButton>(R.id.delete_target_btn)
+        // 목표 삭제 버튼 클릭 시
         deleteTartgetBtn.setOnClickListener {
-            Log.e("삭제 버튼","눌림")
-            //viewGroup.removeView(view.parent as View)
-            (view.parent as ViewGroup).removeView(view)
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
+                (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
+            }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
+            builder.show()
         }
     }
 }
