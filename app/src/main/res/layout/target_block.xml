@@ -30,15 +30,6 @@
         app:layout_constraintStart_toStartOf="@+id/target_title"
         app:layout_constraintTop_toBottomOf="@+id/target_title" />
 
-    <LinearLayout
-        android:id="@+id/todo_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="@+id/todo_add_btn"
-        app:layout_constraintTop_toBottomOf="@+id/todo_add_btn">
-    </LinearLayout>
-
     <ImageButton
         android:id="@+id/delete_target_btn"
         android:layout_width="wrap_content"
@@ -48,5 +39,16 @@
         android:src="@drawable/delete_target_icon"
         app:layout_constraintStart_toEndOf="@+id/target_title"
         app:layout_constraintTop_toTopOf="@+id/target_title" />
+
+    <LinearLayout
+        android:id="@+id/todo_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="@+id/todo_add_btn"
+        app:layout_constraintTop_toBottomOf="@+id/todo_add_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="30dp">
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
