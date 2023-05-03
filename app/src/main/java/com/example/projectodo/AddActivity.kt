@@ -77,16 +77,6 @@ class AddActivity : AppCompatActivity() {
             builder.show()
         }
 
-        /*
-        // 일정 삭제 버튼 이벤트
-        binding.deleteTodoBtn.setOnClickListener { 
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("일정을 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which -> 
-                // 일정 삭제 이벤트 구현 필요
-            }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
-            builder.show()
-        }*/
-
         // 목표 추가 버튼 이벤트
         binding.targetBtn.setOnClickListener {
             addTarget(binding.targetLayout)
@@ -96,11 +86,12 @@ class AddActivity : AppCompatActivity() {
     // 동적으로 목표 블록 추가하는 함수
     fun addTarget(viewGroup: ViewGroup) {
         val parentLayout = findViewById<LinearLayout>(R.id.target_layout) // 목표 레이아웃 객체 연결
-        val view = LayoutInflater.from(this).inflate(R.layout.target_block, null)
+        val view = LayoutInflater.from(this).inflate(R.layout.target_block, null) // 목표 블록 객체
+
         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
         val deleteTartgetBtn = view.findViewById<ImageButton>(R.id.delete_target_btn) // 목표 삭제 버튼 객체
-        val todoAddBtn = view.findViewById<Button>(R.id.todo_add_btn) // 일정 추가 버튼 객체
+        val todoAddBtn = view.findViewById<Button>(R.id.todo_add_btn) // 투두 추가 버튼 객체
 
         layoutParams.setMargins(0, 0, 0, 30)
         view.layoutParams = layoutParams
@@ -122,8 +113,17 @@ class AddActivity : AppCompatActivity() {
 
         // 일정 등록 버튼 클릭 시
         todoAddBtn.setOnClickListener {
-            val todoblock = LayoutInflater.from(this).inflate(R.layout.todo_block, null)
-            view.findViewById<LinearLayout>(R.id.todo_layout).addView(todoblock)
+            val todoblock = LayoutInflater.from(this).inflate(R.layout.todo_block, null) // // 투두 블록 객체
+            val todoLayout = view.findViewById<LinearLayout>(R.id.todo_layout)
+            val todoDeleteBtn= todoblock.findViewById<ImageButton>(R.id.delete_todo_btn) // 투두 삭제 버튼 객체
+            if(todoblock.parent != null){
+                (todoblock.parent as ViewGroup).removeView(todoblock)
+            }
+            todoLayout.addView(todoblock)
+
+            todoDeleteBtn.setOnClickListener {
+                todoLayout.removeView(todoblock)
+            }
         }
     }
 }
