@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/todo_add_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -30,31 +30,14 @@
         app:layout_constraintStart_toStartOf="@+id/target_title"
         app:layout_constraintTop_toBottomOf="@+id/target_title" />
 
-    <CheckBox
-        android:id="@+id/todo_check"
+    <LinearLayout
+        android:id="@+id/todo_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
-
-    <EditText
-        android:id="@+id/todo_list"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/lightpink"
-        android:inputType="text"
-        android:textCursorDrawable="@color/lightpink"
-        app:layout_constraintStart_toEndOf="@+id/todo_check"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
-
-    <ImageButton
-        android:id="@+id/delete_todo_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/delete_todo_icon"
-        app:layout_constraintStart_toEndOf="@+id/todo_list"
-        app:layout_constraintTop_toTopOf="@+id/todo_list" />
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="@+id/todo_add_btn"
+        app:layout_constraintTop_toBottomOf="@+id/todo_add_btn">
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/delete_target_btn"

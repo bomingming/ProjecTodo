@@ -9,13 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.projectodo.databinding.ActivityAddBinding
 import java.util.Calendar
 
@@ -28,9 +27,6 @@ class AddActivity : AppCompatActivity() {
 
         var startDateString = "" // 시작일
         var endDateString = "" // 마감일
-
-        // 동적 뷰 관련 변수
-
 
         // 시작일 버튼 이벤트
         binding.startDateBtn.setOnClickListener {
@@ -100,10 +96,11 @@ class AddActivity : AppCompatActivity() {
     // 동적으로 목표 블록 추가하는 함수
     fun addTarget(viewGroup: ViewGroup) {
         val parentLayout = findViewById<LinearLayout>(R.id.target_layout) // 목표 레이아웃 객체 연결
-        val inflater = LayoutInflater.from(this)
-        val view = inflater.inflate(R.layout.target_block, null)
+        val view = LayoutInflater.from(this).inflate(R.layout.target_block, null)
         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
         val deleteTartgetBtn = view.findViewById<ImageButton>(R.id.delete_target_btn) // 목표 삭제 버튼 객체
+        val todoAddBtn = view.findViewById<Button>(R.id.todo_add_btn) // 일정 추가 버튼 객체
 
         layoutParams.setMargins(0, 0, 0, 30)
         view.layoutParams = layoutParams
@@ -121,6 +118,12 @@ class AddActivity : AppCompatActivity() {
                 (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
             }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
             builder.show()
+        }
+
+        // 일정 등록 버튼 클릭 시
+        todoAddBtn.setOnClickListener {
+            val todoblock = LayoutInflater.from(this).inflate(R.layout.todo_block, null)
+            view.findViewById<LinearLayout>(R.id.todo_layout).addView(todoblock)
         }
     }
 }
