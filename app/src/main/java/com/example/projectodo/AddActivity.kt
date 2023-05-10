@@ -111,16 +111,17 @@ class AddActivity : AppCompatActivity() {
             builder.show()
         }
 
-        // 일정 등록 버튼 클릭 시
+        // 일정 등록 버튼 이벤트
         todoAddBtn.setOnClickListener {
             val todoblock = LayoutInflater.from(this).inflate(R.layout.todo_block, null) // // 투두 블록 객체
-            val todoLayout = view.findViewById<LinearLayout>(R.id.todo_layout)
+            val todoLayout = view.findViewById<LinearLayout>(R.id.todo_layout) // 투두 레이아웃 객체
             val todoDeleteBtn= todoblock.findViewById<ImageButton>(R.id.delete_todo_btn) // 투두 삭제 버튼 객체
             if(todoblock.parent != null){
                 (todoblock.parent as ViewGroup).removeView(todoblock)
             }
-            todoLayout.addView(todoblock)
+            todoLayout.addView(todoblock) // 투두 생성
 
+            // 투두 삭제 버튼 이벤트
             todoDeleteBtn.setOnClickListener {
                 todoLayout.removeView(todoblock)
             }
