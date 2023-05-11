@@ -1,6 +1,7 @@
 package com.example.projectodo
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -42,6 +43,18 @@ class MainActivity : AppCompatActivity() {
             val detailIntent: Intent = Intent(this, DetailActivity::class.java)
             startActivity(detailIntent)
         }
+
+        val dbHelper = MyDatabaseHelper(this)
+        val db = dbHelper.writableDatabase
+        //Log.e("db 값", db.toString())
+        //Log.e("db 쿼리 값", db.rawQuery("SELECT * FROM project", null).toString())
+        //val cursor = db.rawQuery("SELECT * FROM project", null)
+       // Log.e("테스트", cursor.toString())
+
+/*
+        cursor.close()
+        db.close()*/
+
 
         // ActivityResultLauncher 초기화
         launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
