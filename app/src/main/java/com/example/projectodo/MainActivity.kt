@@ -15,12 +15,24 @@ import com.example.projectodo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private val binding: ActivityMainBinding by lazy{
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
     // 프로젝트 등록 이벤트를 위한 변수 선언
     private lateinit var launcher : ActivityResultLauncher<Intent>
     
     // 동적으로 추가되는 뷰 내부의 텍스트 뷰의 참조 변수
     private var dynamicTitle : TextView? = null // 프로젝트 제목
     private var dynamicDate : TextView? = null // 프로젝트 기간
+
+    // DBHelper를 전역 변수로 선언
+    private val myDatabaseHelper: MyDatabaseHelper by lazy {
+        Log.d("MyDatabaseHelper", "Initializing database helper")
+        MyDatabaseHelper.getInstance(applicationContext) ?: throw IllegalStateException("Database helper is null")
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,18 +55,7 @@ class MainActivity : AppCompatActivity() {
             val detailIntent: Intent = Intent(this, DetailActivity::class.java)
             startActivity(detailIntent)
         }
-
-        val dbHelper = MyDatabaseHelper(this)
-        val db = dbHelper.writableDatabase
-        //Log.e("db 값", db.toString())
-        //Log.e("db 쿼리 값", db.rawQuery("SELECT * FROM project", null).toString())
-        //val cursor = db.rawQuery("SELECT * FROM project", null)
-       // Log.e("테스트", cursor.toString())
-
-/*
-        cursor.close()
-        db.close()*/
-
+        getAllDb()
 
         // ActivityResultLauncher 초기화
         launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
@@ -81,7 +82,6 @@ class MainActivity : AppCompatActivity() {
                     dynamicDate = view.findViewById(R.id.proj_date)
                 }
 
-                // 동적 뷰 내부 텍스트 뷰 수정
                 projTitle?.let{value ->
                     dynamicTitle?.text = value
                 }
@@ -89,6 +89,27 @@ class MainActivity : AppCompatActivity() {
                     dynamicDate?.text = value
                 }
             }
+        }
+    }
+
+    // 액티비티 종료 시 DBHelper도 종료
+    override fun onDestroy() {
+        //myDatabaseHelper.close()
+        super.onDestroy()
+    }
+
+    private fun showTxt(text: String){
+
+    }
+
+    private fun getAllDb(){
+        try {
+            val selectResult = myDatabaseHelper.getAllData()
+            Log.e("오류미발생", selectResult)
+
+        }catch (e:Exception){
+            Log.e("오류?", "발생")
+            e.printStackTrace()
         }
     }
 }

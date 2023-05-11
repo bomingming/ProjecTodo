@@ -6,42 +6,56 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import java.io.File
 
 // SQLite 데이터베이스를 열기 위한 클래스
-class MyDatabaseHelper(context: Context) : SQLiteOpenHelper (context, "projectodo ", null, 1){
-    val TABLE_NAME = "project"
-    val COL1_PJCODE = "project_code"
-    val COL2_TITLE = "project_title"
-    val COL3_START = "start_day"
-    val COL4_END = "end_day"
+class MyDatabaseHelper(private val context: Context) : SQLiteOpenHelper (context, "projectodo.sqlite3", null, 1){
 
-    // 예제 복사
-    @Volatile
-    private var instance:MyDatabaseHelper? = null
+    private val DB_PATH = context.getExternalFilesDir(null)!!.absolutePath
+    private val DB_NAME = "projectodo.sqlite3"
+    private val TABLE_NAME = "project"
+    private val COL1_PJCODE = "project_code"
+    private val COL2_TITLE = "project_title"
+    private val COL3_START = "start_day"
+    private val COL4_END = "end_day"
 
-    fun getInstance(context: Context) =
-        instance ?: synchronized(MyDatabaseHelper::class.java){
-            instance ?: MyDatabaseHelper(context).also{
-                instance=it
-            }
+    private fun createDatabase(){
+        val databasePath = DB_PATH + File.separator + DB_NAME
+        if(!File(databasePath).exists()){
+            val db = SQLiteDatabase.openOrCreateDatabase(databasePath, null)
+            val createProjectTB = "CREATE TABLE $TABLE_NAME ($COL1_PJCODE INTEGER PRIMARY KEY AUTOINCREMENT, $COL2_TITLE TEXT, $COL3_START TEXT, $COL4_END TEXT)"
+            db.execSQL(createProjectTB)
+            db.close()
         }
+    }
+    companion object {
+        @Volatile private var instance: MyDatabaseHelper? = null
+
+        fun getInstance(context: Context) =
+            instance ?: synchronized(this){
+                instance ?: MyDatabaseHelper(context).also { instance = it }
+            }
+    }
+
+    fun insertData(title: String, start: String, end: String): Boolean{
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COL2_TITLE, title)
+        contentValues.put(COL3_START, start)
+        contentValues.put(COL4_END, end)
+        val result = db.insert(TABLE_NAME, null, contentValues)
+        db.close()
+        return result != -1L
+    }
 
     override fun onCreate(db: SQLiteDatabase) {
         val createProjectTB = "CREATE TABLE $TABLE_NAME ($COL1_PJCODE INTEGER PRIMARY KEY AUTOINCREMENT, $COL2_TITLE TEXT, $COL3_START TEXT, $COL4_END TEXT)"
-        db?.execSQL(createProjectTB)
+        db.execSQL(createProjectTB)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-
-    }
-    fun insertData(title: String, start: String, end: String){
-        val db: SQLiteDatabase = this.writableDatabase
-        val contentValue: ContentValues = ContentValues().apply {
-            put(COL2_TITLE, title)
-            put(COL3_START, start)
-            put(COL4_END, end)
-        }
-        db.insert(TABLE_NAME, null, contentValue)
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        onCreate(db)
     }
 
     fun getAllData(): String{
@@ -49,6 +63,7 @@ class MyDatabaseHelper(context: Context) : SQLiteOpenHelper (context, "projectod
 
         val db:SQLiteDatabase = this.readableDatabase
         val cursor: Cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+
 
         try{
             if(cursor.count != 0){
