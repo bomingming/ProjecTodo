@@ -15,10 +15,6 @@ import com.example.projectodo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding: ActivityMainBinding by lazy{
-        ActivityMainBinding.inflate(layoutInflater)
-    }
-
     // 프로젝트 등록 이벤트를 위한 변수 선언
     private lateinit var launcher : ActivityResultLauncher<Intent>
     
@@ -26,13 +22,8 @@ class MainActivity : AppCompatActivity() {
     private var dynamicTitle : TextView? = null // 프로젝트 제목
     private var dynamicDate : TextView? = null // 프로젝트 기간
 
-    // DBHelper를 전역 변수로 선언
-    private val myDatabaseHelper: MyDatabaseHelper by lazy {
-        Log.d("MyDatabaseHelper", "Initializing database helper")
-        MyDatabaseHelper.getInstance(applicationContext) ?: throw IllegalStateException("Database helper is null")
-    }
-
-
+    // DBHelper 객체
+    private lateinit var myDatabaseHelper: MyDatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +33,31 @@ class MainActivity : AppCompatActivity() {
         // 로딩화면으로 시작
         val loadingIntent: Intent = Intent(this, LoadingActivity::class.java)
         startActivity(loadingIntent)
+
+        // DB 시도
+        val dbHelper = MyDatabaseHelper(this)
+        val db = dbHelper.writableDatabase
+        val cursor = dbHelper.getAllData()
+
+        val title = mutableListOf<String>()
+        val start = mutableListOf<String>()
+        val end = mutableListOf<String>()
+
+        db.execSQL("delete from Project")
+        dbHelper.insertData(db)
+
+        if(cursor.moveToFirst()){
+            val columnIndexTitle = cursor.getColumnIndex(MyDatabaseHelper.COL2_TITLE)
+            val columnIndexStart = cursor.getColumnIndex(MyDatabaseHelper.COL3_START)
+            val columnIndexEnd = cursor.getColumnIndex(MyDatabaseHelper.COL4_END)
+            do{
+                title.add(cursor.getString(columnIndexTitle))
+                start.add(cursor.getString(columnIndexStart))
+                end.add(cursor.getString(columnIndexEnd))
+            }while(cursor.moveToNext())
+        }
+
+        cursor.close()
 
         // 프로젝트 추가 버튼 이벤트 처리(새창)
         binding.addBtn.setOnClickListener{
@@ -55,7 +71,6 @@ class MainActivity : AppCompatActivity() {
             val detailIntent: Intent = Intent(this, DetailActivity::class.java)
             startActivity(detailIntent)
         }
-        getAllDb()
 
         // ActivityResultLauncher 초기화
         launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
@@ -92,24 +107,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 액티비티 종료 시 DBHelper도 종료
     override fun onDestroy() {
-        //myDatabaseHelper.close()
         super.onDestroy()
     }
 
-    private fun showTxt(text: String){
-
-    }
-
-    private fun getAllDb(){
-        try {
-            val selectResult = myDatabaseHelper.getAllData()
-            Log.e("오류미발생", selectResult)
-
-        }catch (e:Exception){
-            Log.e("오류?", "발생")
-            e.printStackTrace()
-        }
-    }
 }
