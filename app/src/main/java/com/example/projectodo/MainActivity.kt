@@ -22,9 +22,6 @@ class MainActivity : AppCompatActivity() {
     private var dynamicTitle : TextView? = null // 프로젝트 제목
     private var dynamicDate : TextView? = null // 프로젝트 기간
 
-    // DBHelper 객체
-    private lateinit var myDatabaseHelper: MyDatabaseHelper
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,31 +30,6 @@ class MainActivity : AppCompatActivity() {
         // 로딩화면으로 시작
         val loadingIntent: Intent = Intent(this, LoadingActivity::class.java)
         startActivity(loadingIntent)
-
-        // DB 시도
-        val dbHelper = MyDatabaseHelper(this)
-        val db = dbHelper.writableDatabase
-        val cursor = dbHelper.getAllData()
-
-        val title = mutableListOf<String>()
-        val start = mutableListOf<String>()
-        val end = mutableListOf<String>()
-
-        db.execSQL("delete from Project")
-        dbHelper.insertData(db)
-
-        if(cursor.moveToFirst()){
-            val columnIndexTitle = cursor.getColumnIndex(MyDatabaseHelper.COL2_TITLE)
-            val columnIndexStart = cursor.getColumnIndex(MyDatabaseHelper.COL3_START)
-            val columnIndexEnd = cursor.getColumnIndex(MyDatabaseHelper.COL4_END)
-            do{
-                title.add(cursor.getString(columnIndexTitle))
-                start.add(cursor.getString(columnIndexStart))
-                end.add(cursor.getString(columnIndexEnd))
-            }while(cursor.moveToNext())
-        }
-
-        cursor.close()
 
         // 프로젝트 추가 버튼 이벤트 처리(새창)
         binding.addBtn.setOnClickListener{
