@@ -5,31 +5,45 @@ import androidx.room.*
 @Dao
 interface ProjectDAO {
     @Insert
-    fun insert(entity: ProjectEntity)
+    fun insertProject(entity: ProjectEntity)
 
     @Insert
-    fun insert(entity: TargetEntity)
+    fun insertTarget(entity: TargetEntity)
 
     @Insert
-    fun insert(entity: TodoEntity)
+    fun insertTodo(entity: TodoEntity)
 
     @Update
-    fun update(entity: ProjectEntity)
+    fun updateProject(entity: ProjectEntity)
 
     @Update
-    fun update(entity: TargetEntity)
+    fun updateTarget(entity: TargetEntity)
 
     @Update
-    fun update(entity: TodoEntity)
+    fun updateTodo(entity: TodoEntity)
 
     @Delete
-    fun delete(entity: ProjectEntity)
+    fun deleteProject(entity: ProjectEntity)
 
     @Delete
-    fun delete(entity: TargetEntity)
+    fun deleteTarget(entity: TargetEntity)
 
     @Delete
-    fun delete(entity: TodoEntity)
+    fun deleteTodo(entity: TodoEntity)
 
-    @Query()
+    // project 테이블 insert 함수
+    @Query("INSERT INTO project (project_title, start_day, end_day) VALUES (:project_title, :start_day, :end_day)")
+    fun insertProjectQuery(project_title: String, start_day: String, end_day: String)
+
+    // target 테이블 insert 함수(프로젝트 등록 시)
+    @Query("INSERT INTO target(project_code_for, target_title, todo_count) VALUES " +
+            "((SELECT project_code FROM project ORDER BY project_code DESC LIMIT 1), :target_title, :todo_count)")
+    fun insertTargetQueryRegis(project_code_for: Int, target_title: String, todo_count: String)
+
+    // todo 테이블 insert 함수(프로젝트 등록 시)
+    @Query("INSERT INTO todo(target_code_for, todo_detail, end_check) VALUES " +
+            "((SELECT project_code FROM project ORDER BY project_code DESC LIMIT 1), :todo_detail, :end_check)")
+    fun insertTodoQueryRegis(target_code_for: Int, todo_detail: String, end_check: Int)
+
+
 }
