@@ -1,5 +1,8 @@
 package com.example.projectodo
 
+import android.view.inspector.IntFlagMapping
+import androidx.annotation.CheckResult
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -28,4 +31,17 @@ data class TargetEntity(
     val todo_count: Int
     )
 
-
+// todo 테이블
+@Entity(tableName = "todo", foreignKeys = [ForeignKey(
+    entity = TargetEntity::class,
+    parentColumns = ["target_code"],
+    childColumns = ["target_code_for"],
+    onDelete = ForeignKey.CASCADE,
+    onUpdate = ForeignKey.CASCADE
+)])
+data class TodoEntity(
+    @PrimaryKey(autoGenerate = true) val todo_code: Int,
+    val target_code_for: Int,
+    val todo_detail: String,
+    val end_check: Int
+)
