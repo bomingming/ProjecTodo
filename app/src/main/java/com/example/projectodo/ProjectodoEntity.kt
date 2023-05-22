@@ -1,8 +1,5 @@
 package com.example.projectodo
 
-import android.view.inspector.IntFlagMapping
-import androidx.annotation.CheckResult
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
