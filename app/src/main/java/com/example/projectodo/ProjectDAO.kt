@@ -1,8 +1,6 @@
 package com.example.projectodo
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface ProjectDAO {
@@ -15,7 +13,23 @@ interface ProjectDAO {
     @Insert
     fun insert(entity: TodoEntity)
 
+    @Update
+    fun update(entity: ProjectEntity)
 
+    @Update
+    fun update(entity: TargetEntity)
+
+    @Update
+    fun update(entity: TodoEntity)
+
+    @Delete
+    fun delete(entity: ProjectEntity)
+
+    @Delete
+    fun delete(entity: TargetEntity)
+
+    @Delete
+    fun delete(entity: TodoEntity)
 
     @Query()
 }
