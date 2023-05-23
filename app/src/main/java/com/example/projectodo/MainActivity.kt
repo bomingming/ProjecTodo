@@ -28,11 +28,20 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Room
-
         // 로딩화면으로 시작
         val loadingIntent: Intent = Intent(this, LoadingActivity::class.java)
         startActivity(loadingIntent)
+
+        Thread{
+            val database = AppDatabase.getInstance(applicationContext)
+            val dao = database.projectDAO()
+
+            val data = dao.getAll()
+
+            runOnUiThread{
+
+            }
+        }
 
         // 프로젝트 추가 버튼 이벤트 처리(새창)
         binding.addBtn.setOnClickListener{
