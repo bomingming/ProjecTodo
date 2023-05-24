@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.room.Room
 import com.example.projectodo.databinding.ActivityMainBinding
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +23,9 @@ class MainActivity : AppCompatActivity() {
     // 동적으로 추가되는 뷰 내부의 텍스트 뷰의 참조 변수
     private var dynamicTitle : TextView? = null // 프로젝트 제목
     private var dynamicDate : TextView? = null // 프로젝트 기간
+
+    lateinit var database: AppDatabase
+    var projectList = listOf<ProjectEntity>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +37,15 @@ class MainActivity : AppCompatActivity() {
         startActivity(loadingIntent)
 
         Thread{
-            val database = AppDatabase.getInstance(applicationContext)
-            val dao = database.projectDAO()
-
-            val data = dao.getAll()
+            val database = AppDatabase.getInstance(this)
+            val projectDao = database?.projectDAO()
+            val project = ProjectEntity(0, "테스트1", "시작일1", "마감일1")
+            projectDao?.insertProject(project)
 
             runOnUiThread{
-
+                Log.e("데이터베이스", AppDatabase.toString())
             }
-        }
+        }.start()
 
         // 프로젝트 추가 버튼 이벤트 처리(새창)
         binding.addBtn.setOnClickListener{
@@ -93,6 +97,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+    fun insertProject(projectentity: ProjectEntity){
+        Thread{
+            //val projectDao = database?.projectDAO()
+            database.projectDAO().insertProject(projectentity)
+
+            runOnUiThread{
+
+            }
+        }
+    }
+
+    fun getAllProject(){
+
+    }
+
+    fun deleteProject(){
+
     }
 
 }
