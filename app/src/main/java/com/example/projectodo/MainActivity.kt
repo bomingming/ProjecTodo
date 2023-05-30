@@ -88,15 +88,4 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    fun insertProject(projectentity: ProjectEntity){
-        Thread{
-            //val projectDao = database?.projectDAO()
-            database.projectDAO().insertProject(projectentity)
-
-            runOnUiThread{
-
-            }
-        }
-    }
-
 }
