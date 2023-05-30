@@ -37,14 +37,46 @@ class MainActivity : AppCompatActivity() {
         val loadingIntent: Intent = Intent(this, LoadingActivity::class.java)
         startActivity(loadingIntent)
 
-        // DB 연결 Thread
+        // DB 연결 Thread 호출
+        refreshProjectBlock()
+
+        // launcher 초기화
+        launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result->
+            if(result.resultCode == Activity.RESULT_OK){
+
+            }
+        }
+
+        // 프로젝트 추가 버튼 이벤트 처리(새창)
+        binding.addBtn.setOnClickListener{
+            launcher.launch(Intent(this, AddActivity::class.java))
+        }
+
+        // 프로젝트 블록 클릭 이벤트
+        binding.blockLayout.setOnClickListener{
+            val detailIntent: Intent = Intent(this, DetailActivity::class.java)
+            startActivity(detailIntent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshProjectBlock()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    // DB에서 값을 불러오는 메소드
+    private fun refreshProjectBlock(){
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
             val items = projectDao?.getAllProject()
 
             runOnUiThread{
-                val parentLayout = binding.blockLayout // 레이아웃 객체 연결
+                val parentLayout = findViewById<LinearLayout>(R.id.block_layout) // 레이아웃 객체 연결
                 val inflater = LayoutInflater.from(this)
 
                 if(items != null) {
@@ -62,30 +94,12 @@ class MainActivity : AppCompatActivity() {
                         dynamicDate = view.findViewById(R.id.proj_date)
 
                         dynamicTitle?.text = item.project_title
-                        dynamicDate?.text = item.start_day + "~" + item.end_day
+                        dynamicDate?.text = "${item.start_day}~${item.end_day}"
 
                     }
                 }
             }
         }.start()
-
-        // 프로젝트 추가 버튼 이벤트 처리(새창)
-        binding.addBtn.setOnClickListener{
-            launcher.launch(Intent(this, AddActivity::class.java))
-        }
-
-        // 프로젝트 블록 클릭 이벤트
-        binding.blockLayout.setOnClickListener{
-            val detailIntent: Intent = Intent(this, DetailActivity::class.java)
-            startActivity(detailIntent)
-        }
-
-        // ActivityResultLauncher 초기화
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
 }
