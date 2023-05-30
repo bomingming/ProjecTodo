@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread{
                 val parentLayout = findViewById<LinearLayout>(R.id.block_layout) // 레이아웃 객체 연결
                 val inflater = LayoutInflater.from(this)
+                parentLayout.removeAllViews() // 기존 블록 제거
 
                 if(items != null) {
                     for (item in items) {
