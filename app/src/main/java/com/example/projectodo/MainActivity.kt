@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(loadingIntent)
 
         // DB 연결 Thread 호출
-        refreshProjectBlock()
+        refreshHome()
 
         // launcher 초기화
         launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result->
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        refreshProjectBlock()
+        refreshHome()
     }
 
     override fun onDestroy() {
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // DB에서 값을 불러오는 메소드
-    private fun refreshProjectBlock(){
+    private fun refreshHome(){
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
