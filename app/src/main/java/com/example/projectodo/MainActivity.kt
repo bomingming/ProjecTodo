@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -39,11 +40,32 @@ class MainActivity : AppCompatActivity() {
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
-            val project = ProjectEntity(0, "테스트1", "시작일1", "마감일1")
-            projectDao?.insertProject(project)
+            val items = projectDao?.getAllProject()
 
             runOnUiThread{
-                Log.e("데이터베이스", AppDatabase.toString())
+                val parentLayout = binding.blockLayout // 레이아웃 객체 연결
+                val inflater = LayoutInflater.from(this)
+
+
+                if(items != null) {
+                    //Log.e("item 값", items.toString())
+                    for (item in items) {
+                        val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
+                        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        if(view.parent != null){
+                            (view.parent as ViewGroup).removeView(view)
+                        }
+                        layoutParams.setMargins(0, 10, 0, 40)
+                        view.layoutParams = layoutParams
+                        parentLayout.addView(view)
+
+                        dynamicTitle = view.findViewById(R.id.proj_title)
+                        dynamicDate = view.findViewById(R.id.proj_date)
+
+                        //dynamicTitle?.text =
+
+                    }
+                }
             }
         }.start()
 
@@ -61,38 +83,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // ActivityResultLauncher 초기화
-        launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-            if(result.resultCode == Activity.RESULT_OK){ // 등록 버튼이 눌러진 경우
-                val data = result.data
-                val addedView = data?.getStringExtra("프로젝트 등록")
-                val projTitle = data?.getStringExtra("프로젝트 제목")
-                val projDate = data?.getStringExtra("프로젝트 기간")
 
-                val parentLayout = binding.blockLayout // 레이아웃 객체 연결
-                val inflater = LayoutInflater.from(this)
-                val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
-                val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                
-                // 동적으로 뷰 추가
-                addedView?.let{
-                    layoutParams.setMargins(0, 10, 0, 40)
-                    view.layoutParams = layoutParams
-
-                    parentLayout.addView(view)
-
-                    // 추가된 블록의 텍스트 뷰 참조 변수 초기화
-                    dynamicTitle = view.findViewById(R.id.proj_title)
-                    dynamicDate = view.findViewById(R.id.proj_date)
-                }
-
-                projTitle?.let{value ->
-                    dynamicTitle?.text = value
-                }
-                projDate?.let { value->
-                    dynamicDate?.text = value
-                }
-            }
-        }
     }
 
     override fun onDestroy() {
@@ -108,14 +99,6 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
-    }
-
-    fun getAllProject(){
-
-    }
-
-    fun deleteProject(){
-
     }
 
 }

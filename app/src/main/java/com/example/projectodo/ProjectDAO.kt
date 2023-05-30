@@ -32,6 +32,6 @@ interface ProjectDAO {
     fun deleteTodo(entity: TodoEntity)
 
     @Query("SELECT * FROM Project")
-    fun getAll(): List<ProjectEntity>
+    fun getAllProject(): List<ProjectEntity>
 
 }

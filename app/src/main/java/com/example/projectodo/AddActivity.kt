@@ -61,6 +61,18 @@ class AddActivity : AppCompatActivity() {
             // 프로젝트 등록 여부 넘겨줌
             intent.putExtra("프로젝트 등록", result)
             setResult(Activity.RESULT_OK, intent)
+
+            // DB에 값 넣기
+            Thread{
+                val database = AppDatabase.getInstance(this)
+                val projectDao = database?.projectDAO()
+                val projectTB = ProjectEntity(0, binding.titleEdit.text.toString(), binding.startDateText.text.toString(), binding.endDateText.text.toString())
+                projectDao?.insertProject(projectTB)
+
+                runOnUiThread{
+                }
+            }.start()
+
             Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show() // 토스트 메시지 출력
 
             finish() // 등록 화면 종료
