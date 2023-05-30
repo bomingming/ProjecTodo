@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         val loadingIntent: Intent = Intent(this, LoadingActivity::class.java)
         startActivity(loadingIntent)
 
+        // DB 연결 Thread
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
@@ -46,9 +47,7 @@ class MainActivity : AppCompatActivity() {
                 val parentLayout = binding.blockLayout // 레이아웃 객체 연결
                 val inflater = LayoutInflater.from(this)
 
-
                 if(items != null) {
-                    //Log.e("item 값", items.toString())
                     for (item in items) {
                         val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
                         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -62,7 +61,8 @@ class MainActivity : AppCompatActivity() {
                         dynamicTitle = view.findViewById(R.id.proj_title)
                         dynamicDate = view.findViewById(R.id.proj_date)
 
-                        //dynamicTitle?.text =
+                        dynamicTitle?.text = item.project_title
+                        dynamicDate?.text = item.start_day + "~" + item.end_day
 
                     }
                 }
@@ -71,8 +71,6 @@ class MainActivity : AppCompatActivity() {
 
         // 프로젝트 추가 버튼 이벤트 처리(새창)
         binding.addBtn.setOnClickListener{
-            //val addIntent: Intent = Intent(this, AddActivity::class.java)
-            //startActivity(addIntent)
             launcher.launch(Intent(this, AddActivity::class.java))
         }
 
