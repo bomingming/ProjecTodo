@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
     // 동적으로 추가되는 뷰 내부의 텍스트 뷰의 참조 변수
     private var dynamicTitle : TextView? = null // 프로젝트 제목
     private var dynamicDate : TextView? = null // 프로젝트 기간
-    private var dynamicCode : TextView? = null // 프로젝트 코드
 
     lateinit var database: AppDatabase
     var projectList = listOf<ProjectEntity>()
@@ -108,11 +107,9 @@ class MainActivity : AppCompatActivity() {
 
                         dynamicTitle = view.findViewById(R.id.proj_title)
                         dynamicDate = view.findViewById(R.id.proj_date)
-                        dynamicCode = view.findViewById(R.id.project_code)
 
                         dynamicTitle?.text = item.project_title
                         dynamicDate?.text = "${item.start_day}~${item.end_day}"
-                        dynamicCode?.text = item.project_code.toString()
 
                     }
                 }
