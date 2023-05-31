@@ -2,6 +2,7 @@ package com.example.projectodo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -21,14 +22,13 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         
         // DB에서 값 불러와 데이터 출력
-        //refreshDetail()
+        refreshDetail()
 
         // 더보기 버튼 이벤트 처리
         binding.moreBtn.setOnClickListener {
             val bottomSheet = BottomSheetFragment()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
-        
     }
 
     private fun refreshDetail(){
@@ -36,31 +36,21 @@ class DetailActivity : AppCompatActivity() {
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
             val items = projectDao?.getAllProject()
+            
+            // TextView 객체들
+            val projectTitle = findViewById<TextView>(R.id.title_text)
+            val projectDate = findViewById<TextView>(R.id.proj_date_period)
+            
+            // 메인화면에서 클릭한 블록의 데이터
+            val projectCode = intent.getIntExtra("프로젝트 코드", 0)
+
+            // 프로젝트 코드를 기준으로 DB에서 값 받아오기
+            val project = projectDao?.getProjectByCode(projectCode)
 
             runOnUiThread{
-                val parentLayout = findViewById<LinearLayout>(R.id.block_layout) // 레이아웃 객체 연결
-                val inflater = LayoutInflater.from(this)
-                parentLayout.removeAllViews() // 기존 블록 제거
+                projectTitle.text = project?.project_title // 프로젝트 제목
+                projectDate.text = "${project?.start_day} ~ ${project?.end_day}" // 프로젝트 기간
 
-                if(items != null) {
-                    for (item in items) {
-                        val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
-                        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                        if(view.parent != null){
-                            (view.parent as ViewGroup).removeView(view)
-                        }
-                        layoutParams.setMargins(0, 10, 0, 40)
-                        view.layoutParams = layoutParams
-                        parentLayout.addView(view)
-
-                        dynamicTitle = view.findViewById(R.id.proj_title)
-                        dynamicDate = view.findViewById(R.id.proj_date)
-
-                        dynamicTitle?.text = item.project_title
-                        dynamicDate?.text = "${item.start_day}~${item.end_day}"
-
-                    }
-                }
             }
         }.start()
     }
