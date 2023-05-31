@@ -55,12 +55,26 @@ class MainActivity : AppCompatActivity() {
         // 프로젝트 블록 클릭 이벤트
         binding.blockLayout.setOnClickListener{
             val detailIntent: Intent = Intent(this, DetailActivity::class.java)
+            onBlockClick()
+
             startActivity(detailIntent)
+        }
+    }
+
+    fun onBlockClick(projectCode: Int){
+        val database = AppDatabase.getInstance(this)
+        val projectDao = database?.projectDAO()
+        val project = projectDao?.getProjectByCode(projectCode)
+
+        project?.let{
+            val intent = Intent(this, DetailActivity::class.java)
+            Log.e("확인", projectCode.toString())
         }
     }
 
     override fun onResume() {
         super.onResume()
+        // DB 연결 Thread 호출
         refreshHome()
     }
 
