@@ -35,7 +35,7 @@ interface ProjectDAO {
     fun getAllProject(): List<ProjectEntity>
 
     // 프로젝트 기본 키로 프로젝트 정보 가져오기
-    @Query("SELECT * FROM project WHERE id = projectCode")
-    fun getProjectByCode(projectCode: Int)
+    /*@Query("SELECT * FROM project WHERE id = projectCode")
+    fun getProjectByCode(projectCode: Int)*/
 
 }

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     // 동적으로 추가되는 뷰 내부의 텍스트 뷰의 참조 변수
     private var dynamicTitle : TextView? = null // 프로젝트 제목
     private var dynamicDate : TextView? = null // 프로젝트 기간
+    private var dynamicCode : TextView? = null // 프로젝트 코드
 
     lateinit var database: AppDatabase
     var projectList = listOf<ProjectEntity>()
@@ -51,29 +53,20 @@ class MainActivity : AppCompatActivity() {
         binding.addBtn.setOnClickListener{
             launcher.launch(Intent(this, AddActivity::class.java))
         }
-
-        // 프로젝트 블록 클릭 이벤트
-        binding.blockLayout.setOnClickListener{
-            val detailIntent: Intent = Intent(this, DetailActivity::class.java)
-            onBlockClick()
-
-            startActivity(detailIntent)
-        }
     }
 
-    fun onBlockClick(projectCode: Int){
-        val database = AppDatabase.getInstance(this)
-        val projectDao = database?.projectDAO()
-        val project = projectDao?.getProjectByCode(projectCode)
+    // 프로젝트 블록 클릭 이벤트
+    fun onBlockClick(code: Int){
+        val detailIntent: Intent = Intent(this, DetailActivity::class.java)
 
-        project?.let{
-            val intent = Intent(this, DetailActivity::class.java)
-            Log.e("확인", projectCode.toString())
-        }
+        detailIntent.putExtra("프로젝트 코드", code) // 상세 정보 화면으로 프로젝트 코드 넘겨주기
+
+        startActivity(detailIntent) // 상세 정보 화면 열기
     }
 
     override fun onResume() {
         super.onResume()
+
         // DB 연결 Thread 호출
         refreshHome()
     }
@@ -98,18 +91,28 @@ class MainActivity : AppCompatActivity() {
                     for (item in items) {
                         val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
                         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        val blockCode = item.project_code
+
                         if(view.parent != null){
                             (view.parent as ViewGroup).removeView(view)
                         }
                         layoutParams.setMargins(0, 10, 0, 40)
                         view.layoutParams = layoutParams
+
+                        // 프로젝트 클릭 이벤트 리스너
+                        view.setOnClickListener{
+                            onBlockClick(blockCode)
+                        }
+
                         parentLayout.addView(view)
 
                         dynamicTitle = view.findViewById(R.id.proj_title)
                         dynamicDate = view.findViewById(R.id.proj_date)
+                        dynamicCode = view.findViewById(R.id.project_code)
 
                         dynamicTitle?.text = item.project_title
                         dynamicDate?.text = "${item.start_day}~${item.end_day}"
+                        dynamicCode?.text = item.project_code.toString()
 
                     }
                 }
