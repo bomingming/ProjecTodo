@@ -1,6 +1,8 @@
 package com.example.projectodo
 
+import android.app.Activity
 import android.app.AlertDialog
+import android.app.Instrumentation.ActivityResult
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +10,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.projectodo.databinding.FragmentBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -33,6 +37,13 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         binding.deleteBtn.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage("프로젝트를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
+
+                //프로젝트 코드 받아오기
+                val projectCode = arguments?.getInt("프로젝트 코드")
+
+                // 프로젝트 삭제 구현
+
+
                 // BottomSheet 종료
                 dismiss()
                 // 토스트 메시지로 삭제 완료 알림
@@ -49,4 +60,5 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             dismiss()
         }
     }
+
 }

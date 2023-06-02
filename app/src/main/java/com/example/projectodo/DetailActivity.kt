@@ -1,5 +1,6 @@
 package com.example.projectodo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,12 +15,16 @@ class DetailActivity : AppCompatActivity() {
     // 동적으로 추가되는 뷰 내부의 텍스트 뷰의 참조 변수
     private var dynamicTitle : TextView? = null // 프로젝트 제목
     private var dynamicDate : TextView? = null // 프로젝트 기간
-    
+    private var projectCode: Int = 0 // 프로젝트 코드
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        
+        // 메인화면에서 클릭한 블록의 데이터
+        val projectCode = intent.getIntExtra("프로젝트 코드", 0)
         
         // DB에서 값 불러와 데이터 출력
         refreshDetail()
@@ -27,6 +32,10 @@ class DetailActivity : AppCompatActivity() {
         // 더보기 버튼 이벤트 처리
         binding.moreBtn.setOnClickListener {
             val bottomSheet = BottomSheetFragment()
+            // Fragment로 프로젝트 코드 넘겨주기
+            bottomSheet.arguments = Bundle().apply {
+                putInt("프로젝트 코드", projectCode)
+            }
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
     }
@@ -41,9 +50,6 @@ class DetailActivity : AppCompatActivity() {
             val projectTitle = findViewById<TextView>(R.id.title_text)
             val projectDate = findViewById<TextView>(R.id.proj_date_period)
             
-            // 메인화면에서 클릭한 블록의 데이터
-            val projectCode = intent.getIntExtra("프로젝트 코드", 0)
-
             // 프로젝트 코드를 기준으로 DB에서 값 받아오기
             val project = projectDao?.getProjectByCode(projectCode)
 
