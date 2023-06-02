@@ -40,7 +40,7 @@ interface ProjectDAO {
     fun getProjectByCode(projectCode: Int): ProjectEntity
 
     // 프로젝트 삭제
-    /*@Query("DELETE FROM project WHERE project_code = :projectCode")
-    fun deleteProject(projectCode: Int): ProjectEntity*/
+    @Query("DELETE FROM project WHERE project_code = :projectCode")
+    fun deleteProject(projectCode: Int)
 
 }

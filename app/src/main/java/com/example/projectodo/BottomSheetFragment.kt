@@ -39,10 +39,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             builder.setMessage("프로젝트를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
 
                 //프로젝트 코드 받아오기
-                val projectCode = arguments?.getInt("프로젝트 코드")
+                val projectCode = arguments?.getInt("프로젝트 코드")?: 0 // getInt가 null 반환 시 0 할당하므로 Type mismatch 오류 해결
 
                 // 프로젝트 삭제 구현
-
+                deleteProjectFromDB(projectCode)
 
                 // BottomSheet 종료
                 dismiss()
@@ -59,6 +59,15 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             // BottomSheet는 종료
             dismiss()
         }
+    }
+
+    // DB에서 프로젝트를 삭제
+    private fun deleteProjectFromDB(projectCode: Int){
+        Thread{
+            val database = AppDatabase.getInstance(requireContext())
+            val projectDao = database?.projectDAO()
+            projectDao?.deleteProject(projectCode)
+        }.start()
     }
 
 }
