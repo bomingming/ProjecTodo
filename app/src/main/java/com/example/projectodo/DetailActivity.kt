@@ -25,6 +25,8 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val projectCode_delete = intent.getIntExtra("프로젝트 코드", 0)
         
         // DB에서 값 불러와 데이터 출력
         refreshDetail(binding)
@@ -34,7 +36,7 @@ class DetailActivity : AppCompatActivity() {
             val bottomSheet = BottomSheetFragment()
             // Fragment로 프로젝트 코드 넘겨주기
             bottomSheet.arguments = Bundle().apply {
-                putInt("프로젝트 코드", projectCode)
+                putInt("프로젝트 코드", projectCode_delete)
             }
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
@@ -47,14 +49,12 @@ class DetailActivity : AppCompatActivity() {
             val items = projectDao?.getAllProject()
             
             // 프로젝트 코드를 기준으로 DB에서 값 받아오기
-            val projectCode = intent.getIntExtra("프로젝트 코드", 0)
-            val project = projectDao?.getProjectByCode(projectCode)
+            val projectCode_detail = intent.getIntExtra("프로젝트 코드", 0)
+            val project = projectDao?.getProjectByCode(projectCode_detail)
 
             runOnUiThread{
                 binding.titleText.text = project?.project_title // 프로젝트 제목
                 binding.projDatePeriod.text = "${project?.start_day} ~ ${project?.end_day}" // 프로젝트 기간
-
-                Log.e("프로젝트명", binding.titleText.text.toString())
             }
         }.start()
     }

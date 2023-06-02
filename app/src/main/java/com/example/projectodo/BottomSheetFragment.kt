@@ -41,14 +41,21 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                 //프로젝트 코드 받아오기
                 val projectCode = arguments?.getInt("프로젝트 코드")?: 0 // getInt가 null 반환 시 0 할당하므로 Type mismatch 오류 해결
 
-                // BottomSheet 종료
-                dismiss()
-
                 // 프로젝트 삭제 구현
                 deleteProjectFromDB(projectCode)
 
+                // BottomSheet 종료
+                dismiss()
+
                 // 토스트 메시지로 삭제 완료 알림
                 Toast.makeText(requireContext(), "프로젝트가 삭제되었습니다",Toast.LENGTH_SHORT).show()
+
+                // 상세 화면 종료
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP // 이미 존재하는 MainActivity의 인스턴스를 재사용
+                startActivity(intent)
+                requireActivity().finish()
+
             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
             builder.show()
         }
