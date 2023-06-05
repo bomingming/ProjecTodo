@@ -49,6 +49,12 @@ class EditActivity : AppCompatActivity() {
 
         // 수정 버튼 이벤트
         binding.regisBtn.setOnClickListener {
+            val projectCode = intent.getIntExtra("프로젝트 코드_for수정", 0)
+            val newTitle = binding.titleEdit.text.toString()
+            val newStart = binding.startDateText.text.toString()
+            val newEnd = binding.endDateText.text.toString()
+            editProjectFromDB(projectCode, newTitle, newStart, newEnd) // DB값 UPDATE
+
             Toast.makeText(this, "프로젝트가 수정되었습니다", Toast.LENGTH_SHORT).show()
             finish() // 수정 화면 종료
         }
@@ -102,18 +108,16 @@ class EditActivity : AppCompatActivity() {
     }
 
     // 수정된 결과 DB에 넣기
-    private fun resultEdit(binding: ActivityEditBinding){
+    private fun editProjectFromDB(projectCode: Int, newTitle: String, newStart: String, newEnd: String){
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
-            val items = projectDao?.getAllProject()
 
-            // 프로젝트 코드를 기준으로 DB에서 값 받아오기
-            val projectCode_edit = intent.getIntExtra("프로젝트 코드_for수정", 0)
-            val project = projectDao?.getProjectByCode(projectCode_edit)
-
-            runOnUiThread{
+            var project = projectDao?.getProjectByCode(projectCode)
+            if(project != null){
+                projectDao?.editProject(projectCode, newTitle, newStart, newEnd) // 수정된 값을 DB에 UPDATE
             }
+
         }.start()
     }
 }

@@ -45,6 +45,6 @@ interface ProjectDAO {
 
     // 프로젝트 수정
     @Query("UPDATE project SET project_title = :projectTitle, start_day = :startDay, end_day = :endDay WHERE project_code = :projectCode")
-    fun editProject(projectCode: Int)
+    fun editProject(projectCode: Int, projectTitle: String, startDay: String, endDay: String)
 
 }

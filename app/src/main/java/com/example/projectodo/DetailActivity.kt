@@ -42,6 +42,13 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // DB 연결 Thread 호출
+        refreshDetail(binding)
+    }
+
     private fun refreshDetail(binding: ActivityDetailBinding){
         Thread{
             val database = AppDatabase.getInstance(this)
