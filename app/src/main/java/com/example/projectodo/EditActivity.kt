@@ -23,7 +23,7 @@ class EditActivity : AppCompatActivity() {
         var startDateString = "" // 시작일
         var endDateString = "" // 마감일
 
-        openEdit(binding)
+        openEdit(binding) // 수정 화면에 데이터 구성
 
         // 시작일 버튼 이벤트
         binding.startDateBtn.setOnClickListener {
@@ -82,6 +82,7 @@ class EditActivity : AppCompatActivity() {
         }
     }
 
+    // 수정 화면 실행 메소드
     private fun openEdit(binding: ActivityEditBinding){
         Thread{
             val database = AppDatabase.getInstance(this)
@@ -96,6 +97,22 @@ class EditActivity : AppCompatActivity() {
                 binding.titleEdit.setText(project?.project_title) // 프로젝트 제목 값 불러오기
                 binding.startDateText.setText(project?.start_day) // 프로젝트 시작일 값 불러오기
                 binding.endDateText.setText(project?.end_day) // 프로젝트 마감일 값 불러오기
+            }
+        }.start()
+    }
+
+    // 수정된 결과 DB에 넣기
+    private fun resultEdit(binding: ActivityEditBinding){
+        Thread{
+            val database = AppDatabase.getInstance(this)
+            val projectDao = database?.projectDAO()
+            val items = projectDao?.getAllProject()
+
+            // 프로젝트 코드를 기준으로 DB에서 값 받아오기
+            val projectCode_edit = intent.getIntExtra("프로젝트 코드_for수정", 0)
+            val project = projectDao?.getProjectByCode(projectCode_edit)
+
+            runOnUiThread{
             }
         }.start()
     }
