@@ -5,18 +5,25 @@ import android.app.DatePickerDialog
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import com.example.projectodo.databinding.ActivityDetailBinding
 import com.example.projectodo.databinding.ActivityEditBinding
 import java.util.*
 
 class EditActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityEditBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityEditBinding.inflate(layoutInflater)
+        binding = ActivityEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         var startDateString = "" // 시작일
         var endDateString = "" // 마감일
+
+        openEdit(binding)
 
         // 시작일 버튼 이벤트
         binding.startDateBtn.setOnClickListener {
@@ -73,5 +80,23 @@ class EditActivity : AppCompatActivity() {
             }).setNegativeButton("취소", DialogInterface.OnClickListener{ dialog, which ->  })
             builder.show()
         }
+    }
+
+    private fun openEdit(binding: ActivityEditBinding){
+        Thread{
+            val database = AppDatabase.getInstance(this)
+            val projectDao = database?.projectDAO()
+            val items = projectDao?.getAllProject()
+
+            // 프로젝트 코드를 기준으로 DB에서 값 받아오기
+            val projectCode_edit = intent.getIntExtra("프로젝트 코드_for수정", 0)
+            val project = projectDao?.getProjectByCode(projectCode_edit)
+
+            runOnUiThread{
+                binding.titleEdit.setText(project?.project_title) // 프로젝트 제목 값 불러오기
+                binding.startDateText.setText(project?.start_day) // 프로젝트 시작일 값 불러오기
+                binding.endDateText.setText(project?.end_day) // 프로젝트 마감일 값 불러오기
+            }
+        }.start()
     }
 }

@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class DetailActivity : AppCompatActivity() {
 
-    private  lateinit var binding: ActivityDetailBinding
+    private lateinit var binding: ActivityDetailBinding
 
     // 동적으로 추가되는 뷰 내부의 텍스트 뷰의 참조 변수
     private var dynamicTitle : TextView? = null // 프로젝트 제목

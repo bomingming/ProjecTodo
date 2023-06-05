@@ -63,7 +63,10 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         // 수정 버튼 이벤트
         binding.editBtn.setOnClickListener {
             val intent : Intent = Intent(requireContext(), EditActivity::class.java)
+            val projectCode = arguments?.getInt("프로젝트 코드")?: 0 // getInt가 null 반환 시 0 할당하므로 Type mismatch 오류 해결
+            intent.putExtra("프로젝트 코드_for수정", projectCode) // 수정 화면으로 프로젝트 코드 넘겨주기
             startActivity(intent)
+
             // BottomSheet는 종료
             dismiss()
         }
