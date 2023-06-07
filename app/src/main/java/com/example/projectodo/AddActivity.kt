@@ -10,19 +10,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.projectodo.databinding.ActivityAddBinding
+import com.example.projectodo.databinding.ActivityDetailBinding
 import java.util.Calendar
 
 class AddActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityAddBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityAddBinding.inflate(layoutInflater)
+        binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         var startDateString = "" // 시작일
@@ -58,7 +58,18 @@ class AddActivity : AppCompatActivity() {
                 val database = AppDatabase.getInstance(this)
                 val projectDao = database?.projectDAO()
                 val projectTB = ProjectEntity(0, binding.titleEdit.text.toString(), binding.startDateText.text.toString(), binding.endDateText.text.toString())
-                projectDao?.insertProject(projectTB)
+                val projectCode = projectDao?.insertProject(projectTB)
+
+                for(i in 0 until binding.targetLayout.childCount){
+                    val targetBlock = binding.targetLayout.getChildAt(i) as ConstraintLayout
+                    val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title)
+
+                    // DB에 프로젝트 저장 후 해당 기본키 목표 블록의 외래키로 할당
+                    val targetEntity = TargetEntity(0,  projectCode!!.toInt(), targetTitle.text.toString(), 0)
+                    projectDao?.insertTarget(targetEntity)
+                }
+
+                //saveTarget(projectDao)
 
                 runOnUiThread{
                 }
@@ -103,6 +114,7 @@ class AddActivity : AppCompatActivity() {
         if(view.parent != null){
             (view.parent as ViewGroup).removeView(view)
         }
+
         parentLayout.addView(view) // 목표 블록 추가
 
         // 목표 삭제 버튼 클릭 시

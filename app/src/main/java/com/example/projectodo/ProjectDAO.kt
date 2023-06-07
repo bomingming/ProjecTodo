@@ -6,7 +6,7 @@ import androidx.room.*
 @Dao
 interface ProjectDAO {
     @Insert
-    fun insertProject(entity: ProjectEntity)
+    fun insertProject(entity: ProjectEntity) : Long
 
     @Insert
     fun insertTarget(entity: TargetEntity)
