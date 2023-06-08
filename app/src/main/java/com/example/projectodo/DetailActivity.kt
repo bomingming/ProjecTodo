@@ -10,15 +10,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.projectodo.databinding.ActivityDetailBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.nio.file.Files.size
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
 
-    // 동적으로 추가되는 뷰 내부의 텍스트 뷰의 참조 변수
-    private var dynamicTitle : TextView? = null // 프로젝트 제목
-    private var dynamicDate : TextView? = null // 프로젝트 기간
-    private var projectCode: Int = 0 // 프로젝트 코드
+    // 목표 블록 내부의 변수
+    private var dynamicTarget : TextView? = null // 프로젝트 제목
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,17 +52,42 @@ class DetailActivity : AppCompatActivity() {
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
-            val items = projectDao?.getAllProject()
-            
+
             // 프로젝트 코드를 기준으로 DB에서 값 받아오기
             val projectCode_detail = intent.getIntExtra("프로젝트 코드", 0)
+
+            val itemTarget = projectDao?.getAllTarget(projectCode_detail) // 해당 프로젝트의 모든 목표 목록
+
             val project = projectDao?.getProjectByCode(projectCode_detail)
             val target = projectDao?.getTargetByCode(projectCode_detail)
 
             runOnUiThread{
                 binding.titleText.text = project?.project_title // 프로젝트 제목
                 binding.projDatePeriod.text = "${project?.start_day} ~ ${project?.end_day}" // 프로젝트 기간
-                binding.targetTitleBlock.text = target?.target_title // 목표 이름
+
+                // 목표 블록
+                val parentLayout = findViewById<LinearLayout>(R.id.block_layout) // 레이아웃 객체 연결
+                val inflater = LayoutInflater.from(this)
+                parentLayout.removeAllViews() // 기존 블록 제거
+                if(itemTarget != null){
+                    for(i in 0 until itemTarget.size){
+                        val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
+                        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        val item = itemTarget[i]
+
+                        if(view.parent != null){
+                            (view.parent as ViewGroup).removeView(view)
+                        }
+                        layoutParams.setMargins(0, 10, 0, 40)
+                        view.layoutParams = layoutParams
+
+                        dynamicTarget = view.findViewById(R.id.target_title)
+
+                        //binding.targetTitleBlock.text = target?.target_title // 목표 이름
+                        Log.e("목표", item.toString())
+                    }
+                }
+                
             }
         }.start()
     }
