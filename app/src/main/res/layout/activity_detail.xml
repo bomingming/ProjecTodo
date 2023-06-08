@@ -1,139 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/more_btn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="fitCenter"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/more_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"/>
 
-    <ImageButton
-        android:id="@+id/more_btn"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:scaleType="fitCenter"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/more_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"/>
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:fontFamily="@font/kimpo"
+                android:text="프로젝트 제목"
+                android:textColor="@color/black"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:scaleType="fitCenter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/more_btn" />
 
-    <TextView
-        android:id="@+id/title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:fontFamily="@font/kimpo"
-        android:text="프로젝트 제목"
-        android:textColor="@color/black"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        android:scaleType="fitCenter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/more_btn" />
+            <TextView
+                android:id="@+id/proj_date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kimpo"
+                android:text="프로젝트 기간"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                app:layout_constraintStart_toStartOf="@+id/title_text"
+                app:layout_constraintTop_toBottomOf="@+id/title_text"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"/>
 
-    <TextView
-        android:id="@+id/proj_date_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/kimpo"
-        android:text="프로젝트 기간"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        app:layout_constraintStart_toStartOf="@+id/title_text"
-        app:layout_constraintTop_toBottomOf="@+id/title_text"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"/>
+            <TextView
+                android:id="@+id/proj_date_period"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/kimpo"
+                android:text="년 월 일 ~ 년 월 일"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                app:layout_constraintStart_toStartOf="@+id/proj_date_text"
+                app:layout_constraintTop_toBottomOf="@+id/proj_date_text"
+                android:layout_marginTop="5dp"/>
 
-    <TextView
-        android:id="@+id/proj_date_period"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/kimpo"
-        android:text="년 월 일 ~ 년 월 일"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        app:layout_constraintStart_toStartOf="@+id/proj_date_text"
-        app:layout_constraintTop_toBottomOf="@+id/proj_date_text"
-        android:layout_marginTop="5dp"/>
+            <ProgressBar
+                android:id="@+id/progressBar_detail"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="200dp"
+                android:layout_height="10dp"
+                android:max="100"
+                android:progress="50"
+                android:progressDrawable="@drawable/progressbar_style"
+                app:layout_constraintStart_toStartOf="@+id/title_text"
+                app:layout_constraintTop_toBottomOf="@+id/proj_date_period"
+                android:layout_marginTop="30dp"/>
 
-    <ProgressBar
-        android:id="@+id/progressBar_detail"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="200dp"
-        android:layout_height="10dp"
-        android:max="100"
-        android:progress="50"
-        android:progressDrawable="@drawable/progressbar_style"
-        app:layout_constraintStart_toStartOf="@+id/title_text"
-        app:layout_constraintTop_toBottomOf="@+id/proj_date_period"
-        android:layout_marginTop="30dp"/>
+            <TextView
+                android:id="@+id/progress_per_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/kimpo"
+                android:text="50%"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toBottomOf="@+id/progressBar_detail"
+                app:layout_constraintStart_toEndOf="@+id/progressBar_detail"
+                app:layout_constraintTop_toTopOf="@+id/progressBar_detail" />
 
-    <TextView
-        android:id="@+id/progress_per_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:fontFamily="@font/kimpo"
-        android:text="50%"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar_detail"
-        app:layout_constraintStart_toEndOf="@+id/progressBar_detail"
-        app:layout_constraintTop_toTopOf="@+id/progressBar_detail" />
+            <ImageButton
+                android:id="@+id/progress_more_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@color/white"
+                android:src="@drawable/progress_more_icon"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toBottomOf="@+id/progress_per_detail"
+                app:layout_constraintStart_toEndOf="@+id/progress_per_detail"
+                app:layout_constraintTop_toTopOf="@+id/progress_per_detail" />
 
-    <ImageButton
-        android:id="@+id/progress_more_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@color/white"
-        android:src="@drawable/progress_more_icon"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_per_detail"
-        app:layout_constraintStart_toEndOf="@+id/progress_per_detail"
-        app:layout_constraintTop_toTopOf="@+id/progress_per_detail" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/block_target"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/rectangle_style"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar_detail">
 
-        <TextView
-            android:id="@+id/target_title_Block"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/kimpo"
-            android:text="목표 이름"
-            android:textColor="@color/black"
-            android:textSize="18dp"
+            android:scrollbars="none"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+    </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/todo_check_block"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/target_title_Block"
-            app:layout_constraintTop_toBottomOf="@+id/target_title_Block" />
-
-        <TextView
-            android:id="@+id/todo_list_block"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/kimpo"
-            android:text="일정 1"
-            android:textColor="@color/black"
-            android:textSize="15dp"
-            app:layout_constraintBottom_toBottomOf="@+id/todo_check_block"
-            app:layout_constraintStart_toEndOf="@+id/todo_check_block"
-            app:layout_constraintTop_toBottomOf="@+id/target_title_Block" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
