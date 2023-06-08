@@ -58,7 +58,7 @@ class AddActivity : AppCompatActivity() {
                 val database = AppDatabase.getInstance(this)
                 val projectDao = database?.projectDAO()
                 val projectTB = ProjectEntity(0, binding.titleEdit.text.toString(), binding.startDateText.text.toString(), binding.endDateText.text.toString())
-                val projectCode = projectDao?.insertProject(projectTB)
+                val projectCode = projectDao?.insertProject(projectTB) // DB에 프로젝트 추가
 
                 for(i in 0 until binding.targetLayout.childCount){
                     val targetBlock = binding.targetLayout.getChildAt(i) as ConstraintLayout
@@ -66,10 +66,8 @@ class AddActivity : AppCompatActivity() {
 
                     // DB에 프로젝트 저장 후 해당 기본키 목표 블록의 외래키로 할당
                     val targetEntity = TargetEntity(0,  projectCode!!.toInt(), targetTitle.text.toString(), 0)
-                    projectDao?.insertTarget(targetEntity)
+                    projectDao?.insertTarget(targetEntity) // DB에 목록 추가
                 }
-
-                //saveTarget(projectDao)
 
                 runOnUiThread{
                 }

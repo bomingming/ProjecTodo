@@ -58,10 +58,12 @@ class DetailActivity : AppCompatActivity() {
             // 프로젝트 코드를 기준으로 DB에서 값 받아오기
             val projectCode_detail = intent.getIntExtra("프로젝트 코드", 0)
             val project = projectDao?.getProjectByCode(projectCode_detail)
+            val target = projectDao?.getTargetByCode(projectCode_detail)
 
             runOnUiThread{
                 binding.titleText.text = project?.project_title // 프로젝트 제목
                 binding.projDatePeriod.text = "${project?.start_day} ~ ${project?.end_day}" // 프로젝트 기간
+                binding.targetTitleBlock.text = target?.target_title // 목표 이름
             }
         }.start()
     }

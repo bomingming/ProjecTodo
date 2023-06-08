@@ -39,6 +39,10 @@ interface ProjectDAO {
     @Query("SELECT * FROM project WHERE project_code = :projectCode")
     fun getProjectByCode(projectCode: Int): ProjectEntity
 
+    // 목표 정보 가져오기
+     @Query("SELECT * FROM target WHERE project_code_for = :projectCode")
+     fun getTargetByCode(projectCode: Int): TargetEntity
+
     // 프로젝트 삭제
     @Query("DELETE FROM project WHERE project_code = :projectCode")
     fun deleteProject(projectCode: Int)
