@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/rectangle_style"
-    app:layout_constraintHorizontal_bias="0.508">
+    android:id="@+id/target_block"
+    android:background="@drawable/rectangle_style">
     <TextView
         android:id="@+id/target_title_detail"
         android:layout_width="wrap_content"

@@ -66,12 +66,12 @@ class DetailActivity : AppCompatActivity() {
                 binding.projDatePeriod.text = "${project?.start_day} ~ ${project?.end_day}" // 프로젝트 기간
 
                 // 목표 블록
-                val parentLayout = findViewById<LinearLayout>(R.id.block_layout) // 레이아웃 객체 연결
+                val parentLayout = findViewById<LinearLayout>(R.id.target_block_layout) // 레이아웃 객체 연결
                 val inflater = LayoutInflater.from(this)
                 parentLayout.removeAllViews() // 기존 블록 제거
                 if(itemTarget != null){
                     for(i in 0 until itemTarget.size){
-                        val view = inflater.inflate(R.layout.project_block, null) // 프로젝트 블록 연결
+                        val view = inflater.inflate(R.layout.target_block_detail, null) // 목표 블록 연결
                         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                         val item = itemTarget[i]
 
@@ -81,10 +81,11 @@ class DetailActivity : AppCompatActivity() {
                         layoutParams.setMargins(0, 10, 0, 40)
                         view.layoutParams = layoutParams
 
-                        dynamicTarget = view.findViewById(R.id.target_title)
+                        parentLayout.addView(view)
 
-                        //binding.targetTitleBlock.text = target?.target_title // 목표 이름
-                        Log.e("목표", item.toString())
+                        dynamicTarget = view.findViewById(R.id.target_title_detail)
+                        dynamicTarget?.text = item.target_title
+
                     }
                 }
                 
