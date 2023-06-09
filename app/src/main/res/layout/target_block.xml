@@ -4,7 +4,8 @@
     android:layout_width="350dp"
     android:layout_height="wrap_content"
     android:background="@drawable/rectangle_style"
-    app:layout_constraintHorizontal_bias="0.508">
+    app:layout_constraintHorizontal_bias="0.508"
+    android:id="@+id/target_block">
     <EditText
         android:id="@+id/target_title"
         android:layout_width="250dp"
@@ -41,7 +42,7 @@
         app:layout_constraintTop_toTopOf="@+id/target_title" />
 
     <LinearLayout
-        android:id="@+id/todo_layout"
+        android:id="@+id/td_add_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"

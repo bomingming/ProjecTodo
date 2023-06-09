@@ -130,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <LinearLayout
-                    android:id="@+id/target_layout"
+                    android:id="@+id/tg_block_add_layout"
                     android:layout_width="350dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"

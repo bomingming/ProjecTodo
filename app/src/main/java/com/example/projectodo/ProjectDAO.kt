@@ -9,7 +9,7 @@ interface ProjectDAO {
     fun insertProject(entity: ProjectEntity) : Long
 
     @Insert
-    fun insertTarget(entity: TargetEntity)
+    fun insertTarget(entity: TargetEntity): Long
 
     @Insert
     fun insertTodo(entity: TodoEntity)

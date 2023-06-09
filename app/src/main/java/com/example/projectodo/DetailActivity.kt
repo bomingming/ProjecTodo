@@ -66,11 +66,11 @@ class DetailActivity : AppCompatActivity() {
                 binding.projDatePeriod.text = "${project?.start_day} ~ ${project?.end_day}" // 프로젝트 기간
 
                 // 목표 블록
-                val parentLayout = findViewById<LinearLayout>(R.id.target_block_layout) // 레이아웃 객체 연결
+                val parentLayout = findViewById<LinearLayout>(R.id.tg_block_detail_layout) // 레이아웃 객체 연결
                 val inflater = LayoutInflater.from(this)
                 parentLayout.removeAllViews() // 기존 블록 제거
                 if(itemTarget != null){
-                    for(i in 0 until itemTarget.size){
+                    for(i in 0 until itemTarget.size){ // 해당 프로젝트의 목표 개수만큼 반복
                         val view = inflater.inflate(R.layout.target_block_detail, null) // 목표 블록 연결
                         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                         val item = itemTarget[i]

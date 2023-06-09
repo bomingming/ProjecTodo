@@ -20,6 +20,9 @@ class AddActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddBinding
 
+    // todo 목록 리스트
+    private val todoDataList: MutableList<String> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddBinding.inflate(layoutInflater)
@@ -60,13 +63,23 @@ class AddActivity : AppCompatActivity() {
                 val projectTB = ProjectEntity(0, binding.titleEdit.text.toString(), binding.startDateText.text.toString(), binding.endDateText.text.toString())
                 val projectCode = projectDao?.insertProject(projectTB) // DB에 프로젝트 추가
 
-                for(i in 0 until binding.targetLayout.childCount){
-                    val targetBlock = binding.targetLayout.getChildAt(i) as ConstraintLayout
+                // 목표 데이터 DB에 넣기
+                for(i in 0 until binding.tgBlockAddLayout.childCount){
+                    val targetBlock = binding.tgBlockAddLayout.getChildAt(i) as ConstraintLayout
                     val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title)
 
                     // DB에 프로젝트 저장 후 해당 기본키 목표 블록의 외래키로 할당
                     val targetEntity = TargetEntity(0,  projectCode!!.toInt(), targetTitle.text.toString(), 0)
-                    projectDao?.insertTarget(targetEntity) // DB에 목록 추가
+                    val targetCode = projectDao?.insertTarget(targetEntity) // DB에 목록 추가
+
+                    // 일정 데이터 DB에 넣기기
+                    val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout)
+                   for(j in 0 until todoLayout.childCount){
+                       val todoBlock = todoLayout.getChildAt(j) as LinearLayout
+                       val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list)
+                       val todoEntity = TodoEntity(0, targetCode!!.toInt(), todoDetail.text.toString(), 0)
+                       projectDao?.insertTodo(todoEntity)
+                    }
                 }
 
                 runOnUiThread{
@@ -91,13 +104,13 @@ class AddActivity : AppCompatActivity() {
 
         // 목표 추가 버튼 이벤트
         binding.targetBtn.setOnClickListener {
-            addTarget(binding.targetLayout)
+            addTarget(binding.tgBlockAddLayout)
         }
     }
 
     // 동적으로 목표 블록 추가하는 함수
     fun addTarget(viewGroup: ViewGroup) {
-        val parentLayout = findViewById<LinearLayout>(R.id.target_layout) // 목표 레이아웃 객체 연결
+        val parentLayout = findViewById<LinearLayout>(R.id.tg_block_add_layout) // 목표 레이아웃 객체 연결
         val view = LayoutInflater.from(this).inflate(R.layout.target_block, null) // 목표 블록 객체
 
         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -124,19 +137,26 @@ class AddActivity : AppCompatActivity() {
             builder.show()
         }
 
-        // 일정 등록 버튼 이벤트
+        // 일정 추가 버튼 이벤트
         todoAddBtn.setOnClickListener {
             val todoblock = LayoutInflater.from(this).inflate(R.layout.todo_block, null) // // 투두 블록 객체
-            val todoLayout = view.findViewById<LinearLayout>(R.id.todo_layout) // 투두 레이아웃 객체
+            val todoLayout = view.findViewById<LinearLayout>(R.id.td_add_layout) // 투두 레이아웃 객체
             val todoDeleteBtn= todoblock.findViewById<ImageButton>(R.id.delete_todo_btn) // 투두 삭제 버튼 객체
+
             if(todoblock.parent != null){
                 (todoblock.parent as ViewGroup).removeView(todoblock)
             }
+
+            // todo EditText의 값을 넣을 변수를 리스트에 추가? 한듯
+            val todoDetail = todoblock.findViewById<EditText>(R.id.todo_list).text.toString()
+            todoDataList.add(todoDetail)
+
             todoLayout.addView(todoblock) // 투두 생성
 
             // 투두 삭제 버튼 이벤트
             todoDeleteBtn.setOnClickListener {
                 todoLayout.removeView(todoblock)
+                todoDataList.remove(todoDetail) // todo 리스트에서도 일정 정보 삭제
             }
         }
     }
