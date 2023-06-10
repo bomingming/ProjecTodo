@@ -36,17 +36,20 @@ interface ProjectDAO {
     @Query("SELECT * FROM Project")
     fun getAllProject(): List<ProjectEntity>
 
-    // 해당 프로젝트의 모든 목표
-    @Query("SELECT * FROM Target WHERE project_code_for = :projectCode")
-    fun getAllTarget(projectCode: Int): List<TargetEntity>
+    @Query("SELECT * FROM Target")
+    fun getAllTarget(): List<TargetEntity>
 
     // 프로젝트 기본 키로 프로젝트 정보 가져오기
     @Query("SELECT * FROM project WHERE project_code = :projectCode")
     fun getProjectByCode(projectCode: Int): ProjectEntity
 
-    // 목표 정보 가져오기
+    // 해당 프로젝트의 목표 정보 가져오기
      @Query("SELECT * FROM target WHERE project_code_for = :projectCode")
-     fun getTargetByCode(projectCode: Int): TargetEntity
+     fun getTargetByCode(projectCode: Int): List<TargetEntity>
+
+     // 해당 목표의 일정 정보 가져오기
+     @Query("SELECT * FROM todo WHERE target_code_for = :targetCode")
+     fun getTodoByCode(targetCode: Int) : List<TodoEntity>
 
     // 프로젝트 삭제
     @Query("DELETE FROM project WHERE project_code = :projectCode")

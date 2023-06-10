@@ -17,24 +17,15 @@
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-
-    <CheckBox
-        android:id="@+id/todo_check_detail"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/td_block_detail_layout"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/target_title_detail"
-        app:layout_constraintTop_toBottomOf="@+id/target_title_detail" />
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/target_title_detail">
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/todo_list_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/kimpo"
-        android:text="일정 1"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        app:layout_constraintStart_toEndOf="@+id/todo_check_detail"
-        app:layout_constraintTop_toTopOf="@+id/todo_check_detail"
-        app:layout_constraintBottom_toBottomOf="@+id/todo_check_detail"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

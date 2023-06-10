@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.setMargins
 import com.example.projectodo.databinding.ActivityDetailBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.nio.file.Files.size
@@ -17,8 +18,8 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
 
     // 목표 블록 내부의 변수
-    private var dynamicTarget : TextView? = null // 프로젝트 제목
-
+    private var dynamicTarget : TextView? = null // 목표 이름
+    private var dynamicTodo : TextView? = null // 일정 내용
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +57,8 @@ class DetailActivity : AppCompatActivity() {
             // 프로젝트 코드를 기준으로 DB에서 값 받아오기
             val projectCode_detail = intent.getIntExtra("프로젝트 코드", 0)
 
-            val itemTarget = projectDao?.getAllTarget(projectCode_detail) // 해당 프로젝트의 모든 목표 목록
-
-            val project = projectDao?.getProjectByCode(projectCode_detail)
-            val target = projectDao?.getTargetByCode(projectCode_detail)
+            val project = projectDao?.getProjectByCode(projectCode_detail) // 프로젝트 코드로 프로젝트 값 받아오기
+            val itemTarget = projectDao?.getTargetByCode(projectCode_detail) // 프로젝트 코드로 목표 목록 받아오기
 
             runOnUiThread{
                 binding.titleText.text = project?.project_title // 프로젝트 제목
@@ -74,6 +73,7 @@ class DetailActivity : AppCompatActivity() {
                         val view = inflater.inflate(R.layout.target_block_detail, null) // 목표 블록 연결
                         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                         val item = itemTarget[i]
+                        val targetCode = item.target_code // 목표 코드(일정을 불러오기 위해 할당)
 
                         if(view.parent != null){
                             (view.parent as ViewGroup).removeView(view)
@@ -83,12 +83,29 @@ class DetailActivity : AppCompatActivity() {
 
                         parentLayout.addView(view)
 
-                        dynamicTarget = view.findViewById(R.id.target_title_detail)
-                        dynamicTarget?.text = item.target_title
+                        dynamicTarget = view.findViewById(R.id.target_title_detail) // 목표 블록 객체 할당
+                        dynamicTarget?.text = item.target_title // 목표 이름 출력
 
+                        Thread{
+                            val superParentLayout = findViewById<LinearLayout>(R.id.td_block_detail_layout)
+                            superParentLayout.removeAllViews()
+                            val itemTodo = projectDao.getTodoByCode(targetCode) // 목표 코드로 일정 목록 받아오기
+                            runOnUiThread{
+                                for(j in 0 until itemTodo!!.size){
+                                    val todoView = inflater.inflate(R.layout.todo_block_detail, null)
+                                    val item_for_todo = itemTodo[j]
+                                    if(todoView.parent != null){
+                                        (todoView.parent as ViewGroup).removeView(view)
+                                    }
+                                    superParentLayout.addView(todoView)
+
+                                    dynamicTodo = todoView.findViewById(R.id.todo_list_detail)
+                                    dynamicTodo?.text = item_for_todo.todo_detail
+                                }
+                            }
+                        }.start()
                     }
                 }
-                
             }
         }.start()
     }
