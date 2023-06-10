@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.setMargins
 import com.example.projectodo.databinding.ActivityDetailBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -46,7 +47,7 @@ class DetailActivity : AppCompatActivity() {
         super.onResume()
 
         // DB 연결 Thread 호출
-        refreshDetail(binding)
+        //refreshDetail(binding)
     }
 
     private fun refreshDetail(binding: ActivityDetailBinding){
@@ -87,22 +88,30 @@ class DetailActivity : AppCompatActivity() {
                         dynamicTarget?.text = item.target_title // 목표 이름 출력
 
                         Thread{
-                            val superParentLayout = findViewById<LinearLayout>(R.id.td_block_detail_layout)
-                            superParentLayout.removeAllViews()
                             val itemTodo = projectDao.getTodoByCode(targetCode) // 목표 코드로 일정 목록 받아오기
-                            runOnUiThread{
-                                for(j in 0 until itemTodo!!.size){
-                                    val todoView = inflater.inflate(R.layout.todo_block_detail, null)
-                                    val item_for_todo = itemTodo[j]
-                                    if(todoView.parent != null){
-                                        (todoView.parent as ViewGroup).removeView(view)
-                                    }
-                                    superParentLayout.addView(todoView)
 
-                                    dynamicTodo = todoView.findViewById(R.id.todo_list_detail)
-                                    dynamicTodo?.text = item_for_todo.todo_detail
+                            runOnUiThread{
+                                val superParentLayout = findViewById<LinearLayout>(R.id.tg_block_detail_layout)
+
+                                if(itemTodo != null){
+                                    for(j in 0 until itemTodo!!.size){
+                                        val tdBlockDetailLayout = inflater.inflate(R.layout.todo_block_detail, null)
+
+                                        val item_for_todo = itemTodo[j]
+
+                                        if(tdBlockDetailLayout.parent != null){
+                                            (tdBlockDetailLayout.parent as ViewGroup).removeView(tdBlockDetailLayout)
+                                        }
+                                        val targetBlockLayout = superParentLayout.getChildAt(i) as ConstraintLayout
+                                        val tdBlockDetailParentLayout = targetBlockLayout.findViewById<LinearLayout>(R.id.td_block_detail_layout)
+                                        tdBlockDetailParentLayout.addView(tdBlockDetailLayout)
+
+                                        dynamicTodo = tdBlockDetailLayout.findViewById(R.id.todo_list_detail)
+                                        dynamicTodo?.text = item_for_todo.todo_detail
+                                    }
                                 }
                             }
+
                         }.start()
                     }
                 }
