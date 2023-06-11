@@ -26,6 +26,9 @@ class DetailActivity : AppCompatActivity() {
     // 체크박스 리스트
     private var checkBoxList = mutableListOf<CheckBox>()
 
+    // 일정 코드 리스트
+    private var todoCodeList = mutableListOf<Int>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -61,14 +64,16 @@ class DetailActivity : AppCompatActivity() {
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
-            val todoTB = TodoEntity()
-            for (checkBox in checkBoxList) {
-                if (checkBox.isChecked) {
-
+            //val todoTB = TodoEntity()
+            // 체크박스 완료 체크 여부 확인 for (checkBox in checkBoxList)
+            for (index in 0..checkBoxList.size-1) {
+                if (checkBoxList[index].isChecked) {
+                    projectDao?.editTodoCheck(todoCodeList[index], 1)
                 } else {
-
+                    projectDao?.editTodoCheck(todoCodeList[index], 0)
                 }
             }
+
         }.start()
         // checkBoxList를 순회하면서 체크박스 상태 확인 또는 조작
 
@@ -133,10 +138,11 @@ class DetailActivity : AppCompatActivity() {
                                         val checkbox = tdBlockDetailLayout.findViewById<CheckBox>(R.id.todo_check_detail)
                                         // 체크박스를 리스트에 추가
                                         checkBoxList.add(checkbox)
+                                        // 일정 코드를 리스트에 추가
+                                        todoCodeList.add(item_for_todo.todo_code)
 
                                         dynamicTodo = tdBlockDetailLayout.findViewById(R.id.todo_list_detail)
                                         dynamicTodo?.text = item_for_todo.todo_detail
-
 
                                     }
                                 }

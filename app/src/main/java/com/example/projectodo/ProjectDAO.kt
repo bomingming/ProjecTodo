@@ -60,6 +60,6 @@ interface ProjectDAO {
     fun editProject(projectCode: Int, projectTitle: String, startDay: String, endDay: String)
 
     // 일정 완료 값 수정
-    @Query("UPDATE todo SET end_check = :endCheck WHERE todo_code = todoCode")
-    fun editTodoCheck(endCheck: Int, todoCode: Int)
+    @Query("UPDATE todo SET end_check = :endCheck WHERE todo_code = :todoCode")
+    fun editTodoCheck(todoCode: Int, endCheck: Int)
 }
