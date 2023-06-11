@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -22,15 +23,20 @@ class DetailActivity : AppCompatActivity() {
     private var dynamicTarget : TextView? = null // 목표 이름
     private var dynamicTodo : TextView? = null // 일정 내용
 
+    // 체크박스 리스트
+    private var checkBoxList = mutableListOf<CheckBox>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val projectCode_delete = intent.getIntExtra("프로젝트 코드", 0)
-        
+
         // DB에서 값 불러와 데이터 출력
         refreshDetail(binding)
+
+        Log.e("체크박스 값", checkBoxList.toString())
 
         // 더보기 버튼 이벤트 처리
         binding.moreBtn.setOnClickListener {
@@ -50,7 +56,21 @@ class DetailActivity : AppCompatActivity() {
         //refreshDetail(binding)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // checkBoxList를 순회하면서 체크박스 상태 확인 또는 조작
+        for (checkBox in checkBoxList) {
+            if (checkBox.isChecked) {
+
+            } else {
+
+            }
+        }
+    }
+
     private fun refreshDetail(binding: ActivityDetailBinding){
+
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
@@ -96,7 +116,6 @@ class DetailActivity : AppCompatActivity() {
                                 if(itemTodo != null){
                                     for(j in 0 until itemTodo!!.size){
                                         val tdBlockDetailLayout = inflater.inflate(R.layout.todo_block_detail, null)
-
                                         val item_for_todo = itemTodo[j]
 
                                         if(tdBlockDetailLayout.parent != null){
@@ -106,16 +125,27 @@ class DetailActivity : AppCompatActivity() {
                                         val tdBlockDetailParentLayout = targetBlockLayout.findViewById<LinearLayout>(R.id.td_block_detail_layout)
                                         tdBlockDetailParentLayout.addView(tdBlockDetailLayout)
 
+                                        val checkbox = tdBlockDetailLayout.findViewById<CheckBox>(R.id.todo_check_detail)
+                                        // 체크박스를 리스트에 추가
+                                        checkBoxList.add(checkbox)
+
                                         dynamicTodo = tdBlockDetailLayout.findViewById(R.id.todo_list_detail)
                                         dynamicTodo?.text = item_for_todo.todo_detail
+
+
                                     }
                                 }
+                                // Thread 완료 메소드
+                                // onRefreshComplete()
                             }
-
                         }.start()
                     }
                 }
             }
         }.start()
     }
+     private fun onRefreshComplete(){
+         Log.e("이제는 되자", checkBoxList.toString())
+     }
+
 }
