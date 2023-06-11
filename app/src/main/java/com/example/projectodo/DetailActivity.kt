@@ -36,8 +36,6 @@ class DetailActivity : AppCompatActivity() {
         // DB에서 값 불러와 데이터 출력
         refreshDetail(binding)
 
-        Log.e("체크박스 값", checkBoxList.toString())
-
         // 더보기 버튼 이벤트 처리
         binding.moreBtn.setOnClickListener {
             val bottomSheet = BottomSheetFragment()
@@ -59,14 +57,21 @@ class DetailActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        // checkBoxList를 순회하면서 체크박스 상태 확인 또는 조작
-        for (checkBox in checkBoxList) {
-            if (checkBox.isChecked) {
+        // 체크박스의 값 DB에 저장
+        Thread{
+            val database = AppDatabase.getInstance(this)
+            val projectDao = database?.projectDAO()
+            val todoTB = TodoEntity()
+            for (checkBox in checkBoxList) {
+                if (checkBox.isChecked) {
 
-            } else {
+                } else {
 
+                }
             }
-        }
+        }.start()
+        // checkBoxList를 순회하면서 체크박스 상태 확인 또는 조작
+
     }
 
     private fun refreshDetail(binding: ActivityDetailBinding){
