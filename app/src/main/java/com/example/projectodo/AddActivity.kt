@@ -147,7 +147,7 @@ class AddActivity : AppCompatActivity() {
                 (todoblock.parent as ViewGroup).removeView(todoblock)
             }
 
-            // todo EditText의 값을 넣을 변수를 리스트에 추가? 한듯
+            // todo EditText의 값을 넣을 변수를 리스트에 추가
             val todoDetail = todoblock.findViewById<EditText>(R.id.todo_list).text.toString()
             todoDataList.add(todoDetail)
 

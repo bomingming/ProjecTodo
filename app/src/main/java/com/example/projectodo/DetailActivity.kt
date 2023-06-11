@@ -60,23 +60,21 @@ class DetailActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        // 체크박스의 값 DB에 저장
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
-            //val todoTB = TodoEntity()
-            // 체크박스 완료 체크 여부 확인 for (checkBox in checkBoxList)
+
+            // 체크박스 완료 체크 여부 확인
             for (index in 0..checkBoxList.size-1) {
                 if (checkBoxList[index].isChecked) {
+                    // DB에 완료 값 저장(1)
                     projectDao?.editTodoCheck(todoCodeList[index], 1)
                 } else {
+                    // DB에 미완료 값 저장(2)
                     projectDao?.editTodoCheck(todoCodeList[index], 0)
                 }
             }
-
         }.start()
-        // checkBoxList를 순회하면서 체크박스 상태 확인 또는 조작
-
     }
 
     private fun refreshDetail(binding: ActivityDetailBinding){

@@ -6,6 +6,12 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.example.projectodo.databinding.ActivityDetailBinding
 import com.example.projectodo.databinding.ActivityEditBinding
@@ -14,6 +20,9 @@ import java.util.*
 class EditActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditBinding
+
+    // 일정 목록 리스트
+    private val todoDataList: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,22 +78,10 @@ class EditActivity : AppCompatActivity() {
             builder.show()
         }
 
-        // 목표 삭제 버튼 이벤트
-        binding.deleteTargetBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{ dialog, which ->
-                // 목표 삭제 이벤트 구현 필요
-            }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
-            builder.show()
-        }
-
-        // 일정 삭제 버튼 이벤트
-        binding.deleteTodoBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("일정을 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
-                // 일정 삭제 이벤트 구현 필요
-            }).setNegativeButton("취소", DialogInterface.OnClickListener{ dialog, which ->  })
-            builder.show()
+        // 목표 등록 버튼 이벤트
+        binding.targetBtn.setOnClickListener {
+            // 등록 버튼 메소드 호출
+            addTarget(binding.tgBlockEidtLayout)
         }
     }
 
@@ -119,5 +116,58 @@ class EditActivity : AppCompatActivity() {
             }
 
         }.start()
+    }
+
+    // 동적으로 목표 블록 추가하는 메소드
+    private fun addTarget(viewGroup: ViewGroup){
+        val parentLayout = findViewById<LinearLayout>(R.id.tg_block_eidt_layout) // 목표 레이아웃 객체 연결
+        val view = LayoutInflater.from(this).inflate(R.layout.target_block, null) // 목표 블록 객체
+
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
+        val deleteTartgetBtn = view.findViewById<ImageButton>(R.id.delete_target_btn) // 목표 삭제 버튼 객체
+        val todoAddBtn = view.findViewById<Button>(R.id.todo_add_btn) // 투두 추가 버튼 객체
+
+        layoutParams.setMargins(0, 0, 0, 30)
+        view.layoutParams = layoutParams
+
+        // 부모를 이미 지정한 경우 초기화
+        if(view.parent != null){
+            (view.parent as ViewGroup).removeView(view)
+        }
+
+        parentLayout.addView(view) // 목표 블록 추가
+
+        // 목표 삭제 버튼 클릭 시
+        deleteTartgetBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
+                (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
+            }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
+            builder.show()
+        }
+
+        // 일정 추가 버튼 이벤트
+        todoAddBtn.setOnClickListener {
+            val todoblock = LayoutInflater.from(this).inflate(R.layout.todo_block, null) // // 투두 블록 객체
+            val todoLayout = view.findViewById<LinearLayout>(R.id.td_add_layout) // 투두 레이아웃 객체
+            val todoDeleteBtn= todoblock.findViewById<ImageButton>(R.id.delete_todo_btn) // 투두 삭제 버튼 객체
+
+            if(todoblock.parent != null){
+                (todoblock.parent as ViewGroup).removeView(todoblock)
+            }
+
+            // todo EditText의 값을 넣을 변수를 리스트에 추가
+            val todoDetail = todoblock.findViewById<EditText>(R.id.todo_list).text.toString()
+            todoDataList.add(todoDetail)
+
+            todoLayout.addView(todoblock) // 투두 생성
+
+            // 투두 삭제 버튼 이벤트
+            todoDeleteBtn.setOnClickListener {
+                todoLayout.removeView(todoblock)
+                todoDataList.remove(todoDetail) // todo 리스트에서도 일정 정보 삭제
+            }
+        }
     }
 }
