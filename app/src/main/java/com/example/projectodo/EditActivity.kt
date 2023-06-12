@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import com.example.projectodo.databinding.ActivityDetailBinding
 import com.example.projectodo.databinding.ActivityEditBinding
@@ -20,6 +21,10 @@ import java.util.*
 class EditActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditBinding
+    
+    // 목표 블록 내부 변수
+    private var dynamicTarget : TextView? = null // 목표 이름
+    private var dynamicTodo : TextView? = null // 일정 내용
 
     // 일정 목록 리스트
     private val todoDataList: MutableList<String> = mutableListOf()
@@ -95,11 +100,37 @@ class EditActivity : AppCompatActivity() {
             // 프로젝트 코드를 기준으로 DB에서 값 받아오기
             val projectCode_edit = intent.getIntExtra("프로젝트 코드_for수정", 0)
             val project = projectDao?.getProjectByCode(projectCode_edit)
+            val itemTarget = projectDao?.getTargetByCode(projectCode_edit) // 프로젝트 코드로 목표 목록 받아오기
 
             runOnUiThread{
                 binding.titleEdit.setText(project?.project_title) // 프로젝트 제목 값 불러오기
                 binding.startDateText.setText(project?.start_day) // 프로젝트 시작일 값 불러오기
                 binding.endDateText.setText(project?.end_day) // 프로젝트 마감일 값 불러오기
+
+                // 목표 블록
+                val parentLayout = findViewById<LinearLayout>(R.id.tg_block_eidt_layout) // 수정 화면 내부 레이아웃 객체 연결
+                val inflater = LayoutInflater.from(this)
+                parentLayout.removeAllViews() // 기존 블록 제거
+                if(itemTarget != null){
+                    for(i in 0 until itemTarget.size){
+                        val view = inflater.inflate(R.layout.target_block, null)
+                        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        val item = itemTarget[i]
+                        val targetCode = item.target_code // 목표 코드(일정 불러오기 위함)
+
+                        if(view.parent != null){
+                            (view.parent as ViewGroup).removeView(view)
+                        }
+                        layoutParams.setMargins(0, 10, 0, 40)
+                        view.layoutParams = layoutParams
+
+                        parentLayout.addView(view)
+
+                        dynamicTarget = view.findViewById(R.id.target_title)
+                        dynamicTarget?.text = item.target_title
+
+                    }
+                }
             }
         }.start()
     }

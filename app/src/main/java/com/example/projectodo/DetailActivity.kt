@@ -144,8 +144,6 @@ class DetailActivity : AppCompatActivity() {
 
                                     }
                                 }
-                                // Thread 완료 메소드
-                                // onRefreshComplete()
                             }
                         }.start()
                     }
@@ -153,8 +151,5 @@ class DetailActivity : AppCompatActivity() {
             }
         }.start()
     }
-     private fun onRefreshComplete(){
-         Log.e("이제는 되자", checkBoxList.toString())
-     }
 
 }
