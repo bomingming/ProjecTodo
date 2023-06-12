@@ -130,6 +130,15 @@ class EditActivity : AppCompatActivity() {
                         dynamicTarget = view.findViewById(R.id.target_title)
                         dynamicTarget?.text = item.target_title
 
+                        // 기존 목표 블록의 삭제 버튼 이벤트
+                        view.findViewById<ImageButton>(R.id.delete_target_btn).setOnClickListener {
+                            val builder = AlertDialog.Builder(this)
+                            builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
+                                (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
+                            }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
+                            builder.show()
+                        }
+
                         Thread{
                             val itemTodo = projectDao?.getTodoByCode(targetCode) // 목표 코드로 일정 목록 받아오기
 
@@ -148,9 +157,14 @@ class EditActivity : AppCompatActivity() {
                                         val tdBlockEditParentLayout = targetBlockLayout.findViewById<LinearLayout>(R.id.td_add_layout)
                                         tdBlockEditParentLayout.addView(tdBlockEditLayout)
 
-
                                         dynamicTodo = tdBlockEditLayout.findViewById(R.id.todo_list)
                                         dynamicTodo?.text = item_for_todo.todo_detail
+
+                                        // 기존 일정 블록의 삭제 버튼 이벤트
+                                        tdBlockEditLayout.findViewById<ImageButton>(R.id.delete_todo_btn).setOnClickListener {
+                                            tdBlockEditParentLayout.removeView(tdBlockEditLayout)
+                                        }
+
                                     }
                                 }
                             }
