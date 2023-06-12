@@ -14,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.projectodo.databinding.ActivityDetailBinding
 import com.example.projectodo.databinding.ActivityEditBinding
 import java.util.*
@@ -129,6 +130,31 @@ class EditActivity : AppCompatActivity() {
                         dynamicTarget = view.findViewById(R.id.target_title)
                         dynamicTarget?.text = item.target_title
 
+                        Thread{
+                            val itemTodo = projectDao?.getTodoByCode(targetCode) // 목표 코드로 일정 목록 받아오기
+
+                            runOnUiThread {
+                                val superParentLayout = findViewById<LinearLayout>(R.id.tg_block_eidt_layout)
+
+                                if(itemTodo != null){
+                                    for(j in 0 until itemTodo!!.size){
+                                        val tdBlockEditLayout = inflater.inflate(R.layout.todo_block, null)
+                                        val item_for_todo = itemTodo[j]
+
+                                        if(tdBlockEditLayout.parent !=null){
+                                            (tdBlockEditLayout.parent as ViewGroup).removeView(tdBlockEditLayout)
+                                        }
+                                        val targetBlockLayout = superParentLayout.getChildAt(i) as ConstraintLayout
+                                        val tdBlockEditParentLayout = targetBlockLayout.findViewById<LinearLayout>(R.id.td_add_layout)
+                                        tdBlockEditParentLayout.addView(tdBlockEditLayout)
+
+
+                                        dynamicTodo = tdBlockEditLayout.findViewById(R.id.todo_list)
+                                        dynamicTodo?.text = item_for_todo.todo_detail
+                                    }
+                                }
+                            }
+                        }.start()
                     }
                 }
             }
