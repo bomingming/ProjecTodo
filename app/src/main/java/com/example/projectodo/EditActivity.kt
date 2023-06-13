@@ -135,7 +135,9 @@ class EditActivity : AppCompatActivity() {
                         view.findViewById<ImageButton>(R.id.delete_target_btn).setOnClickListener {
                             val builder = AlertDialog.Builder(this)
                             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
+                                deleteTargetFormDB(targetCode) // DB에서 해당 목표 삭제
                                 (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
+                                
                             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
                             builder.show()
                         }
@@ -145,7 +147,7 @@ class EditActivity : AppCompatActivity() {
                             val newTodoBlock = inflater.inflate(R.layout.todo_block, null)
                             val newDeleteBtn = newTodoBlock.findViewById<ImageButton>(R.id.delete_todo_btn) // 기존 목표 블록 내부의 새로운 일정 블록에 속한 삭제 버튼
 
-                            // 목표 블록 내부마다 동적으로 일정 블록 생성
+                            // 기존 목표 블록 내부마다 동적으로 일정 블록 생성
                             view.findViewById<LinearLayout>(R.id.td_add_layout).addView(newTodoBlock)
 
                             // 기존 목표 블록 내부의 새로운 일정 삭제 버튼 이벤트
@@ -190,7 +192,7 @@ class EditActivity : AppCompatActivity() {
         }.start()
     }
 
-    // 수정된 결과 DB에 넣기
+    // 수정된 프로젝트 값 DB에 넣기
     private fun editProjectFromDB(projectCode: Int, newTitle: String, newStart: String, newEnd: String){
         Thread{
             val database = AppDatabase.getInstance(this)
@@ -255,5 +257,13 @@ class EditActivity : AppCompatActivity() {
                 todoDataList.remove(todoDetail) // todo 리스트에서도 일정 정보 삭제
             }
         }
+    }
+    
+    private fun deleteTargetFormDB(targetCode: Int){
+        Thread{
+            val database = AppDatabase.getInstance(this)
+            val projectDao = database?.projectDAO()
+            projectDao?.deleteTarget(targetCode)
+        }.start()
     }
 }
