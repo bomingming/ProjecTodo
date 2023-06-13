@@ -59,6 +59,10 @@ interface ProjectDAO {
     @Query("DELETE FROM target WHERE target_code = :targetCode")
     fun deleteTarget(targetCode: Int)
 
+    // 일정 삭제
+    @Query("DELETE FROM todo WHERE todo_code = :todoCode")
+    fun deleteTodo(todoCode: Int)
+
     // 프로젝트 수정
     @Query("UPDATE project SET project_title = :projectTitle, start_day = :startDay, end_day = :endDay WHERE project_code = :projectCode")
     fun editProject(projectCode: Int, projectTitle: String, startDay: String, endDay: String)

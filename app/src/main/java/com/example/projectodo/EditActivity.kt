@@ -135,7 +135,7 @@ class EditActivity : AppCompatActivity() {
                         view.findViewById<ImageButton>(R.id.delete_target_btn).setOnClickListener {
                             val builder = AlertDialog.Builder(this)
                             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
-                                deleteTargetFormDB(targetCode) // DB에서 해당 목표 삭제
+                                deleteTargetFromDB(targetCode) // DB에서 해당 목표 삭제
                                 (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
                                 
                             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
@@ -180,7 +180,8 @@ class EditActivity : AppCompatActivity() {
 
                                         // 기존 일정 블록의 삭제 버튼 이벤트
                                         todoblock.findViewById<ImageButton>(R.id.delete_todo_btn).setOnClickListener {
-                                            tdBlockEditParentLayout.removeView(todoblock)
+                                            deleteTodoFromDB(item_for_todo.todo_code) // DB에서 해당 일정 삭제
+                                            tdBlockEditParentLayout.removeView(todoblock) // 기존 일정 블록 삭제
                                         }
                                     }
                                 }
@@ -259,11 +260,21 @@ class EditActivity : AppCompatActivity() {
         }
     }
     
-    private fun deleteTargetFormDB(targetCode: Int){
+    // DB에서 목표 값 삭제 메소드
+    private fun deleteTargetFromDB(targetCode: Int){
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
             projectDao?.deleteTarget(targetCode)
+        }.start()
+    }
+
+    // DB에서 일정 값 삭제 메소드
+    private fun deleteTodoFromDB(todoCode: Int){
+        Thread{
+            val database = AppDatabase.getInstance(this)
+            val projectDao = database?.projectDAO()
+            projectDao?.deleteTodo(todoCode)
         }.start()
     }
 }
