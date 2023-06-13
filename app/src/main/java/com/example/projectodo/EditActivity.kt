@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
@@ -139,6 +140,20 @@ class EditActivity : AppCompatActivity() {
                             builder.show()
                         }
 
+                        // 기존 일정 블록의 추가 버튼 이벤트
+                        view.findViewById<Button>(R.id.todo_add_btn).setOnClickListener {
+                            val newTodoBlock = inflater.inflate(R.layout.todo_block, null)
+                            val newDeleteBtn = newTodoBlock.findViewById<ImageButton>(R.id.delete_todo_btn) // 기존 목표 블록 내부의 새로운 일정 블록에 속한 삭제 버튼
+
+                            // 목표 블록 내부마다 동적으로 일정 블록 생성
+                            view.findViewById<LinearLayout>(R.id.td_add_layout).addView(newTodoBlock)
+
+                            // 기존 목표 블록 내부의 새로운 일정 삭제 버튼 이벤트
+                            newDeleteBtn.setOnClickListener {
+                                view.findViewById<LinearLayout>(R.id.td_add_layout).removeView(newTodoBlock)
+                            }
+                        }
+
                         Thread{
                             val itemTodo = projectDao?.getTodoByCode(targetCode) // 목표 코드로 일정 목록 받아오기
 
@@ -147,24 +162,24 @@ class EditActivity : AppCompatActivity() {
 
                                 if(itemTodo != null){
                                     for(j in 0 until itemTodo!!.size){
-                                        val tdBlockEditLayout = inflater.inflate(R.layout.todo_block, null)
+                                        val todoblock = inflater.inflate(R.layout.todo_block, null)
                                         val item_for_todo = itemTodo[j]
 
-                                        if(tdBlockEditLayout.parent !=null){
-                                            (tdBlockEditLayout.parent as ViewGroup).removeView(tdBlockEditLayout)
-                                        }
-                                        val targetBlockLayout = superParentLayout.getChildAt(i) as ConstraintLayout
-                                        val tdBlockEditParentLayout = targetBlockLayout.findViewById<LinearLayout>(R.id.td_add_layout)
-                                        tdBlockEditParentLayout.addView(tdBlockEditLayout)
+                                        val todoLayout = superParentLayout.getChildAt(i) as ConstraintLayout
+                                        val tdBlockEditParentLayout = todoLayout.findViewById<LinearLayout>(R.id.td_add_layout)
 
-                                        dynamicTodo = tdBlockEditLayout.findViewById(R.id.todo_list)
+                                        if(todoblock.parent !=null){
+                                            (todoblock.parent as ViewGroup).removeView(todoblock)
+                                        }
+                                        tdBlockEditParentLayout.addView(todoblock)
+
+                                        dynamicTodo = todoblock.findViewById(R.id.todo_list)
                                         dynamicTodo?.text = item_for_todo.todo_detail
 
                                         // 기존 일정 블록의 삭제 버튼 이벤트
-                                        tdBlockEditLayout.findViewById<ImageButton>(R.id.delete_todo_btn).setOnClickListener {
-                                            tdBlockEditParentLayout.removeView(tdBlockEditLayout)
+                                        todoblock.findViewById<ImageButton>(R.id.delete_todo_btn).setOnClickListener {
+                                            tdBlockEditParentLayout.removeView(todoblock)
                                         }
-
                                     }
                                 }
                             }
