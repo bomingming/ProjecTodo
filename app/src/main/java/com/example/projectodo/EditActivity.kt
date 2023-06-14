@@ -28,6 +28,9 @@ class EditActivity : AppCompatActivity() {
     private var dynamicTarget : TextView? = null // 목표 이름
     private var dynamicTodo : TextView? = null // 일정 내용
 
+    // 목표 코드 목록 리스트
+    private val targetCodeList: MutableList<Int> = mutableListOf()
+
     // 일정 목록 리스트
     private val todoDataList: MutableList<String> = mutableListOf()
 
@@ -71,6 +74,25 @@ class EditActivity : AppCompatActivity() {
             val newEnd = binding.endDateText.text.toString()
             editProjectFromDB(projectCode, newTitle, newStart, newEnd) // DB값 UPDATE
 
+            Thread{
+                val database = AppDatabase.getInstance(this)
+                val projectDao = database?.projectDAO()
+
+                // 기존 목표는 수정, 새로운 목표는 삽입
+                for(i in 0 until binding.tgBlockEidtLayout.childCount){
+                    val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) // 목표 블록
+                    val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title).text.toString() // 목표 이름 칸에 적힌 문자열
+                    val targetCode = targetCodeList.getOrNull(i) // 목표 코드
+
+                    if(targetCode != null){ // 목표 코드가 존재하면
+                        projectDao?.editTarget(targetCode, targetTitle, 0) // 기존 목표이므로 값을 UPDATE
+                    }else{ // 목표 코드가 존재하지 않으면
+                        val newTarget = TargetEntity(0, projectCode, targetTitle, 0)
+                        projectDao?.insertTarget(newTarget)
+                    }
+                }
+            }.start()
+
             Toast.makeText(this, "프로젝트가 수정되었습니다", Toast.LENGTH_SHORT).show()
             finish() // 수정 화면 종료
         }
@@ -85,9 +107,9 @@ class EditActivity : AppCompatActivity() {
             builder.show()
         }
 
-        // 목표 등록 버튼 이벤트
+        // 목표 추가 버튼 이벤트
         binding.targetBtn.setOnClickListener {
-            // 등록 버튼 메소드 호출
+            // 목표 추가 메소드 호출
             addTarget(binding.tgBlockEidtLayout)
         }
     }
@@ -127,6 +149,7 @@ class EditActivity : AppCompatActivity() {
                         view.layoutParams = layoutParams
 
                         parentLayout.addView(view)
+                        targetCodeList.add(targetCode) // 목표 리스트에 목표 코드 추가
 
                         dynamicTarget = view.findViewById(R.id.target_title)
                         dynamicTarget?.text = item.target_title
@@ -137,6 +160,7 @@ class EditActivity : AppCompatActivity() {
                             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
                                 deleteTargetFromDB(targetCode) // DB에서 해당 목표 삭제
                                 (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
+                                targetCodeList.remove(targetCode) // 목표 리스트에서 삭제
                                 
                             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
                             builder.show()
@@ -226,6 +250,7 @@ class EditActivity : AppCompatActivity() {
         }
 
         parentLayout.addView(view) // 목표 블록 추가
+
 
         // 목표 삭제 버튼 클릭 시
         deleteTartgetBtn.setOnClickListener {

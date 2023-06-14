@@ -53,8 +53,6 @@ class AddActivity : AppCompatActivity() {
 
         // 등록 버튼 이벤트
         binding.regisBtn.setOnClickListener {
-            val result = "프로젝트 블록 추가"
-            val intent = Intent()
 
             // DB에 값 넣기
             Thread{
