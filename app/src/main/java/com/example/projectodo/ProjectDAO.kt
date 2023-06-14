@@ -71,6 +71,10 @@ interface ProjectDAO {
     @Query("UPDATE target SET target_title = :targetTitle, todo_count = :todoCount WHERE target_code = :targetCode")
     fun editTarget(targetCode: Int, targetTitle: String, todoCount: Int)
 
+    // 일정 수정
+    @Query("UPDATE todo SET todo_detail = :todoDetail WHERE todo_code = :todoCode")
+    fun editTodo(todoCode: Int, todoDetail: String)
+
     // 일정 완료 값 수정
     @Query("UPDATE todo SET end_check = :endCheck WHERE todo_code = :todoCode")
     fun editTodoCheck(todoCode: Int, endCheck: Int)

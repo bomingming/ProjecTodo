@@ -28,11 +28,11 @@ class EditActivity : AppCompatActivity() {
     private var dynamicTarget : TextView? = null // 목표 이름
     private var dynamicTodo : TextView? = null // 일정 내용
 
-    // 목표 코드 목록 리스트
+    // 목표 코드 리스트
     private val targetCodeList: MutableList<Int> = mutableListOf()
 
-    // 일정 목록 리스트
-    private val todoDataList: MutableList<String> = mutableListOf()
+    // 일정 코드 리스트
+    private val todoCodeList: MutableList<Int> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,11 +84,34 @@ class EditActivity : AppCompatActivity() {
                     val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title).text.toString() // 목표 이름 칸에 적힌 문자열
                     val targetCode = targetCodeList.getOrNull(i) // 목표 코드
 
+                    var targetCodeForTodo: Int? = null // 일정을 위한 목표 코드
+
                     if(targetCode != null){ // 목표 코드가 존재하면
                         projectDao?.editTarget(targetCode, targetTitle, 0) // 기존 목표이므로 값을 UPDATE
+                        //targetCodeForTodo = targetCode
                     }else{ // 목표 코드가 존재하지 않으면
                         val newTarget = TargetEntity(0, projectCode, targetTitle, 0)
-                        projectDao?.insertTarget(newTarget)
+                        targetCodeForTodo = projectDao?.insertTarget(newTarget)?.toInt()
+                    }
+
+                    //Log.e("값", targetCodeForTodo.toString())
+                    val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout)
+
+                    // 기존 일정은 수정, 새로운 일정은 삽입
+                    for(j in 0 until todoLayout.childCount){
+                        val todoBlock = todoLayout.getChildAt(j)
+                        val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list).text.toString() // 일정 내용 칸에 적힌 문자열
+                        val todoCode = todoCodeList.getOrNull(i * todoLayout.childCount + j) // 일정 코드
+
+                        Log.e("목표 코드는?", targetCodeForTodo.toString())
+                        if(todoCode != null){
+                            projectDao?.editTodo(todoCode, todoDetail)
+                            //Log.e("여기만 돌아가나?", "넹")
+                        }else{
+                            val newTodo = TodoEntity(0, targetCodeForTodo!!, todoDetail, 0)
+                            Log.e("이 값은?", targetCodeForTodo.toString())
+                            projectDao?.insertTodo(newTodo)
+                        }
                     }
                 }
             }.start()
@@ -198,6 +221,7 @@ class EditActivity : AppCompatActivity() {
                                             (todoblock.parent as ViewGroup).removeView(todoblock)
                                         }
                                         tdBlockEditParentLayout.addView(todoblock)
+                                        todoCodeList.add(item_for_todo.todo_code) // 일정 코드 리스트에 추가
 
                                         dynamicTodo = todoblock.findViewById(R.id.todo_list)
                                         dynamicTodo?.text = item_for_todo.todo_detail
@@ -206,6 +230,7 @@ class EditActivity : AppCompatActivity() {
                                         todoblock.findViewById<ImageButton>(R.id.delete_todo_btn).setOnClickListener {
                                             deleteTodoFromDB(item_for_todo.todo_code) // DB에서 해당 일정 삭제
                                             tdBlockEditParentLayout.removeView(todoblock) // 기존 일정 블록 삭제
+                                            todoCodeList.remove(item_for_todo.todo_code) // 일정 코드 리스트에서 삭제
                                         }
                                     }
                                 }
@@ -273,14 +298,14 @@ class EditActivity : AppCompatActivity() {
 
             // todo EditText의 값을 넣을 변수를 리스트에 추가
             val todoDetail = todoblock.findViewById<EditText>(R.id.todo_list).text.toString()
-            todoDataList.add(todoDetail)
+            //todoDataList.add(todoDetail)
 
             todoLayout.addView(todoblock) // 투두 생성
 
             // 투두 삭제 버튼 이벤트
             todoDeleteBtn.setOnClickListener {
                 todoLayout.removeView(todoblock)
-                todoDataList.remove(todoDetail) // todo 리스트에서도 일정 정보 삭제
+                //todoDataList.remove(todoDetail) // todo 리스트에서도 일정 정보 삭제
             }
         }
     }
