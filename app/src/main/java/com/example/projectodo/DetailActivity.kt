@@ -1,5 +1,6 @@
 package com.example.projectodo
 
+import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -29,6 +30,9 @@ class DetailActivity : AppCompatActivity() {
     // 일정 코드 리스트
     private var todoCodeList = mutableListOf<Int>()
 
+    // 진행률 팝업 다이얼로그
+    private lateinit var dialog: Dialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -47,6 +51,10 @@ class DetailActivity : AppCompatActivity() {
                 putInt("프로젝트 코드", projectCode_delete)
             }
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+        }
+
+        binding.progressMoreBtn.setOnClickListener {
+            showPopup()
         }
     }
 
@@ -150,6 +158,13 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
         }.start()
+    }
+
+    // 진행률 화면을 띄우는 함수
+    private fun showPopup(){
+        dialog = Dialog(this) // 초기화
+        dialog.setContentView(R.layout.activity_progress_popup) // 진행률 화면과 연결
+        dialog.show()
     }
 
 }
