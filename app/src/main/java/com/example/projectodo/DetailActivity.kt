@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -165,6 +166,11 @@ class DetailActivity : AppCompatActivity() {
         dialog = Dialog(this) // 초기화
         dialog.setContentView(R.layout.activity_progress_popup) // 진행률 화면과 연결
         dialog.show()
+        
+        // 확인 버튼 클릭 이벤트
+        dialog.findViewById<Button>(R.id.popup_btn).setOnClickListener { 
+            dialog.dismiss() // 다이얼로그 종료
+        }
     }
 
 }
