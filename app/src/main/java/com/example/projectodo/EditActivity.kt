@@ -82,34 +82,31 @@ class EditActivity : AppCompatActivity() {
                 for(i in 0 until binding.tgBlockEidtLayout.childCount){
                     val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) // 목표 블록
                     val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title).text.toString() // 목표 이름 칸에 적힌 문자열
-                    val targetCode = targetCodeList.getOrNull(i) // 목표 코드
-
-                    var targetCodeForTodo: Int? = null // 일정을 위한 목표 코드
+                    var targetCode = targetCodeList.getOrNull(i) // 목표 코드
 
                     if(targetCode != null){ // 목표 코드가 존재하면
                         projectDao?.editTarget(targetCode, targetTitle, 0) // 기존 목표이므로 값을 UPDATE
-                        //targetCodeForTodo = targetCode
                     }else{ // 목표 코드가 존재하지 않으면
                         val newTarget = TargetEntity(0, projectCode, targetTitle, 0)
-                        targetCodeForTodo = projectDao?.insertTarget(newTarget)?.toInt()
+                        targetCode = projectDao?.insertTarget(newTarget)?.toInt()
+                        Log.e("else문 내부(새로운 목표)", targetCode.toString())
                     }
 
-                    //Log.e("값", targetCodeForTodo.toString())
                     val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout)
 
                     // 기존 일정은 수정, 새로운 일정은 삽입
                     for(j in 0 until todoLayout.childCount){
                         val todoBlock = todoLayout.getChildAt(j)
                         val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list).text.toString() // 일정 내용 칸에 적힌 문자열
-                        val todoCode = todoCodeList.getOrNull(i * todoLayout.childCount + j) // 일정 코드
+                        val todoCode = todoCodeList.getOrNull(j) // 일정 코드 +++++j의 값을 잘 설정하면 됨!!!!!!!!! 수학적 논리 필요
+                        Log.e("코드 리스트", todoCodeList.toString())
+                        Log.e("투두 코드", todoCode.toString())
 
-                        Log.e("목표 코드는?", targetCodeForTodo.toString())
                         if(todoCode != null){
                             projectDao?.editTodo(todoCode, todoDetail)
-                            //Log.e("여기만 돌아가나?", "넹")
                         }else{
-                            val newTodo = TodoEntity(0, targetCodeForTodo!!, todoDetail, 0)
-                            Log.e("이 값은?", targetCodeForTodo.toString())
+                            Log.e("새로운 일정", todoCode.toString())
+                            val newTodo = TodoEntity(0, targetCode!!, todoDetail, 0) // EditActivity의 111번째 줄
                             projectDao?.insertTodo(newTodo)
                         }
                     }
@@ -142,7 +139,6 @@ class EditActivity : AppCompatActivity() {
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
-            val items = projectDao?.getAllProject()
 
             // 프로젝트 코드를 기준으로 DB에서 값 받아오기
             val projectCode_edit = intent.getIntExtra("프로젝트 코드_for수정", 0)
@@ -189,12 +185,12 @@ class EditActivity : AppCompatActivity() {
                             builder.show()
                         }
 
-                        // 기존 일정 블록의 추가 버튼 이벤트
+                        // 기존 목표 블록의 일정 추가 버튼 이벤트
                         view.findViewById<Button>(R.id.todo_add_btn).setOnClickListener {
                             val newTodoBlock = inflater.inflate(R.layout.todo_block, null)
                             val newDeleteBtn = newTodoBlock.findViewById<ImageButton>(R.id.delete_todo_btn) // 기존 목표 블록 내부의 새로운 일정 블록에 속한 삭제 버튼
 
-                            // 기존 목표 블록 내부마다 동적으로 일정 블록 생성
+                            // 기존 목표 블록 내부마다 동적으로 새로운 일정 블록 생성
                             view.findViewById<LinearLayout>(R.id.td_add_layout).addView(newTodoBlock)
 
                             // 기존 목표 블록 내부의 새로운 일정 삭제 버튼 이벤트
