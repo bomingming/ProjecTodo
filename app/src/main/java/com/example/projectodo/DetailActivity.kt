@@ -54,8 +54,12 @@ class DetailActivity : AppCompatActivity() {
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
 
+        // 진행률 더보기 버튼 클릭 이벤트
         binding.progressMoreBtn.setOnClickListener {
-            showPopup()
+            //showPopup(projectCode_delete)
+            val progressIntent: Intent = Intent(this, ProgressPopupActivity::class.java) // 진행률 상세 화면 인텐트
+            progressIntent.putExtra("프로젝트 코드", projectCode_delete) // 프로젝트 코드 전달
+            startActivity(progressIntent) // 진행률 화면 띄우기
         }
     }
 
@@ -159,18 +163,6 @@ class DetailActivity : AppCompatActivity() {
                 }
             }
         }.start()
-    }
-
-    // 진행률 화면을 띄우는 함수
-    private fun showPopup(){
-        dialog = Dialog(this) // 초기화
-        dialog.setContentView(R.layout.activity_progress_popup) // 진행률 화면과 연결
-        dialog.show()
-        
-        // 확인 버튼 클릭 이벤트
-        dialog.findViewById<Button>(R.id.popup_btn).setOnClickListener { 
-            dialog.dismiss() // 다이얼로그 종료
-        }
     }
 
 }
