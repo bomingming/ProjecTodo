@@ -70,6 +70,7 @@ class EditActivity : AppCompatActivity() {
             val newStart = binding.startDateText.text.toString()
             val newEnd = binding.endDateText.text.toString()
             editProjectFromDB(projectCode, newTitle, newStart, newEnd) // 프로젝트 DB값 UPDATE
+            deleteTargetFromDB(projectCode)
 
             Thread{
                 val database = AppDatabase.getInstance(this)
@@ -274,21 +275,12 @@ class EditActivity : AppCompatActivity() {
         }.start()
     }
     
-    // DB에서 목표 값 삭제 메소드
-    private fun deleteTargetFromDB(targetCode: Int){
+    // DB에서 해당 프로젝트의 모든 목표 값 삭제 메소드
+    private fun deleteTargetFromDB(projectCode: Int){
         Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
-            projectDao?.deleteTarget(targetCode)
-        }.start()
-    }
-
-    // DB에서 일정 값 삭제 메소드
-    private fun deleteTodoFromDB(todoCode: Int){
-        Thread{
-            val database = AppDatabase.getInstance(this)
-            val projectDao = database?.projectDAO()
-            projectDao?.deleteTodo(todoCode)
+            projectDao?.deleteTarget(projectCode)
         }.start()
     }
 }
