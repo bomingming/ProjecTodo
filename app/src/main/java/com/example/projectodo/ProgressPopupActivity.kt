@@ -50,8 +50,6 @@ class ProgressPopupActivity : AppCompatActivity() {
                 val targetCount = targets?.size
                 callback(targetCount?: 0)
             }
-
-
         }.start()
     }
 }

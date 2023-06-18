@@ -31,9 +31,6 @@ class EditActivity : AppCompatActivity() {
     // 목표 코드 리스트
     private val targetCodeList: MutableList<Int> = mutableListOf()
 
-    // 일정 코드 리스트
-    private val todoCodeList: MutableList<Int> = mutableListOf()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditBinding.inflate(layoutInflater)
@@ -72,7 +69,7 @@ class EditActivity : AppCompatActivity() {
             val newTitle = binding.titleEdit.text.toString()
             val newStart = binding.startDateText.text.toString()
             val newEnd = binding.endDateText.text.toString()
-            editProjectFromDB(projectCode, newTitle, newStart, newEnd) // DB값 UPDATE
+            editProjectFromDB(projectCode, newTitle, newStart, newEnd) // 프로젝트 DB값 UPDATE
 
             Thread{
                 val database = AppDatabase.getInstance(this)
@@ -80,35 +77,18 @@ class EditActivity : AppCompatActivity() {
 
                 // 기존 목표는 수정, 새로운 목표는 삽입
                 for(i in 0 until binding.tgBlockEidtLayout.childCount){
-                    val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) // 목표 블록
+                    val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) // 목표 블록 객체
                     val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title).text.toString() // 목표 이름 칸에 적힌 문자열
-                    var targetCode = targetCodeList.getOrNull(i) // 목표 코드
-
-                    if(targetCode != null){ // 목표 코드가 존재하면
-                        projectDao?.editTarget(targetCode, targetTitle, 0) // 기존 목표이므로 값을 UPDATE
-                    }else{ // 목표 코드가 존재하지 않으면
-                        val newTarget = TargetEntity(0, projectCode, targetTitle, 0)
-                        targetCode = projectDao?.insertTarget(newTarget)?.toInt()
-                        Log.e("else문 내부(새로운 목표)", targetCode.toString())
-                    }
-
-                    val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout)
+                    val newTarget = TargetEntity(0, projectCode, targetTitle, 0) // 새로운 목표 객체
+                    val targetCode = projectDao?.insertTarget(newTarget)?.toInt() // 새로운 목표값 DB 삽입 후 생성된 목표 코드 반환
+                    val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout) // 일정 레이아웃 객체
 
                     // 기존 일정은 수정, 새로운 일정은 삽입
                     for(j in 0 until todoLayout.childCount){
                         val todoBlock = todoLayout.getChildAt(j)
                         val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list).text.toString() // 일정 내용 칸에 적힌 문자열
-                        val todoCode = todoCodeList.getOrNull(j) // 일정 코드 +++++j의 값을 잘 설정하면 됨!!!!!!!!! 수학적 논리 필요
-                        Log.e("코드 리스트", todoCodeList.toString())
-                        Log.e("투두 코드", todoCode.toString())
-
-                        if(todoCode != null){
-                            projectDao?.editTodo(todoCode, todoDetail)
-                        }else{
-                            Log.e("새로운 일정", todoCode.toString())
-                            val newTodo = TodoEntity(0, targetCode!!, todoDetail, 0) // EditActivity의 111번째 줄
-                            projectDao?.insertTodo(newTodo)
-                        }
+                        val newTodo = TodoEntity(0, targetCode!!, todoDetail, 0)
+                        projectDao?.insertTodo(newTodo) // 새로운 일정값 DB 삽입
                     }
                 }
             }.start()
@@ -177,10 +157,7 @@ class EditActivity : AppCompatActivity() {
                         view.findViewById<ImageButton>(R.id.delete_target_btn).setOnClickListener {
                             val builder = AlertDialog.Builder(this)
                             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
-                                deleteTargetFromDB(targetCode) // DB에서 해당 목표 삭제
                                 (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
-                                targetCodeList.remove(targetCode) // 목표 리스트에서 삭제
-                                
                             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
                             builder.show()
                         }
@@ -217,16 +194,13 @@ class EditActivity : AppCompatActivity() {
                                             (todoblock.parent as ViewGroup).removeView(todoblock)
                                         }
                                         tdBlockEditParentLayout.addView(todoblock)
-                                        todoCodeList.add(item_for_todo.todo_code) // 일정 코드 리스트에 추가
 
                                         dynamicTodo = todoblock.findViewById(R.id.todo_list)
                                         dynamicTodo?.text = item_for_todo.todo_detail
 
                                         // 기존 일정 블록의 삭제 버튼 이벤트
                                         todoblock.findViewById<ImageButton>(R.id.delete_todo_btn).setOnClickListener {
-                                            deleteTodoFromDB(item_for_todo.todo_code) // DB에서 해당 일정 삭제
                                             tdBlockEditParentLayout.removeView(todoblock) // 기존 일정 블록 삭제
-                                            todoCodeList.remove(item_for_todo.todo_code) // 일정 코드 리스트에서 삭제
                                         }
                                     }
                                 }
@@ -235,20 +209,6 @@ class EditActivity : AppCompatActivity() {
                     }
                 }
             }
-        }.start()
-    }
-
-    // 수정된 프로젝트 값 DB에 넣기
-    private fun editProjectFromDB(projectCode: Int, newTitle: String, newStart: String, newEnd: String){
-        Thread{
-            val database = AppDatabase.getInstance(this)
-            val projectDao = database?.projectDAO()
-
-            var project = projectDao?.getProjectByCode(projectCode)
-            if(project != null){
-                projectDao?.editProject(projectCode, newTitle, newStart, newEnd) // 수정된 값을 DB에 UPDATE
-            }
-
         }.start()
     }
 
@@ -272,13 +232,12 @@ class EditActivity : AppCompatActivity() {
 
         parentLayout.addView(view) // 목표 블록 추가
 
-
         // 목표 삭제 버튼 클릭 시
         deleteTartgetBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
                 (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
-            }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
+            })//.setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
             builder.show()
         }
 
@@ -292,18 +251,27 @@ class EditActivity : AppCompatActivity() {
                 (todoblock.parent as ViewGroup).removeView(todoblock)
             }
 
-            // todo EditText의 값을 넣을 변수를 리스트에 추가
-            val todoDetail = todoblock.findViewById<EditText>(R.id.todo_list).text.toString()
-            //todoDataList.add(todoDetail)
-
             todoLayout.addView(todoblock) // 투두 생성
 
             // 투두 삭제 버튼 이벤트
             todoDeleteBtn.setOnClickListener {
                 todoLayout.removeView(todoblock)
-                //todoDataList.remove(todoDetail) // todo 리스트에서도 일정 정보 삭제
             }
         }
+    }
+
+    // 수정된 프로젝트 값 DB에 넣기
+    private fun editProjectFromDB(projectCode: Int, newTitle: String, newStart: String, newEnd: String){
+        Thread{
+            val database = AppDatabase.getInstance(this)
+            val projectDao = database?.projectDAO()
+
+            var project = projectDao?.getProjectByCode(projectCode)
+            if(project != null){
+                projectDao?.editProject(projectCode, newTitle, newStart, newEnd) // 수정된 값을 DB에 UPDATE
+            }
+
+        }.start()
     }
     
     // DB에서 목표 값 삭제 메소드
