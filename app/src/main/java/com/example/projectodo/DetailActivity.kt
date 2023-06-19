@@ -67,7 +67,7 @@ class DetailActivity : AppCompatActivity() {
         super.onResume()
 
         // DB 연결 Thread 호출
-        //refreshDetail(binding)
+        refreshDetail(binding)
     }
 
     override fun onDestroy() {

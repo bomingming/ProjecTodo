@@ -70,11 +70,11 @@ class EditActivity : AppCompatActivity() {
             val newStart = binding.startDateText.text.toString()
             val newEnd = binding.endDateText.text.toString()
             editProjectFromDB(projectCode, newTitle, newStart, newEnd) // 프로젝트 DB값 UPDATE
-            deleteTargetFromDB(projectCode)
 
             Thread{
                 val database = AppDatabase.getInstance(this)
                 val projectDao = database?.projectDAO()
+                projectDao?.deleteTarget(projectCode )// DB에서 해당 프로젝트의 모든 목표 값 삭제
 
                 // 기존 목표는 수정, 새로운 목표는 삽입
                 for(i in 0 until binding.tgBlockEidtLayout.childCount){
@@ -272,15 +272,6 @@ class EditActivity : AppCompatActivity() {
                 projectDao?.editProject(projectCode, newTitle, newStart, newEnd) // 수정된 값을 DB에 UPDATE
             }
 
-        }.start()
-    }
-    
-    // DB에서 해당 프로젝트의 모든 목표 값 삭제 메소드
-    private fun deleteTargetFromDB(projectCode: Int){
-        Thread{
-            val database = AppDatabase.getInstance(this)
-            val projectDao = database?.projectDAO()
-            projectDao?.deleteTarget(projectCode)
         }.start()
     }
 }
