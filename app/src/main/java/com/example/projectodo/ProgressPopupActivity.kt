@@ -38,6 +38,10 @@ class ProgressPopupActivity : AppCompatActivity() {
                 parentLayout.addView(progressView) // 목표 개수만큼 프로그레스바 동적 출력
             }
         }
+
+        binding.popupBtn.setOnClickListener {
+            finish() // 팝업창 종료
+        }
     }
 
     private fun getTarget(projectCode: Int, callback: (Int)-> Unit){
@@ -47,7 +51,7 @@ class ProgressPopupActivity : AppCompatActivity() {
             val targets = projectDao?.getTargetByCode(projectCode) // 프로젝트 코드로 목표 받아오기
 
             runOnUiThread{
-                val targetCount = targets?.size
+                val targetCount = targets?.size // 해당 프로젝트의 목표 개수
                 callback(targetCount?: 0)
             }
         }.start()

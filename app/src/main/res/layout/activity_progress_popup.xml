@@ -34,18 +34,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="220dp"
             app:layout_constraintBottom_toTopOf="@+id/popup_btn"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="10dp">
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
                 <LinearLayout
                     android:id="@+id/progress_layout"
                     android:layout_width="match_parent"
@@ -56,14 +53,8 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                 </LinearLayout>
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </ScrollView>
-
-
-
         <Button
             android:id="@+id/popup_btn"
             android:layout_width="wrap_content"
@@ -76,7 +67,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginBottom="15dp"/>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
