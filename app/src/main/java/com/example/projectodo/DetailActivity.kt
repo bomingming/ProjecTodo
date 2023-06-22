@@ -32,9 +32,6 @@ class DetailActivity : AppCompatActivity() {
     // 일정 코드 리스트
     private var todoCodeList = mutableListOf<Int>()
 
-    // 진행률 팝업 다이얼로그
-    private lateinit var dialog: Dialog
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -158,6 +155,11 @@ class DetailActivity : AppCompatActivity() {
                                         todoLayoutParams.setMargins(0, 0, 0, 10)
                                         tdBlockDetailLayout.layoutParams = todoLayoutParams
                                         tdBlockDetailParentLayout.addView(tdBlockDetailLayout) // 일정 블록 추가
+
+                                        // DB에서 해당 일정의 완료여부 가져오기
+                                        if(item_for_todo.end_check == 1){ // 완료 여부가 1인 경우
+                                            tdBlockDetailLayout.findViewById<CheckBox>(R.id.todo_check_detail).isChecked = true // 체크박스 체크
+                                        }
                                     }
                                 }
                             }
