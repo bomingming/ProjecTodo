@@ -76,7 +76,6 @@ class EditActivity : AppCompatActivity() {
                 val projectDao = database?.projectDAO()
                 projectDao?.deleteTarget(projectCode )// DB에서 해당 프로젝트의 모든 목표 값 삭제
 
-                // 기존 목표는 수정, 새로운 목표는 삽입
                 for(i in 0 until binding.tgBlockEidtLayout.childCount){
                     val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) // 목표 블록 객체
                     val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title).text.toString() // 목표 이름 칸에 적힌 문자열
@@ -84,13 +83,13 @@ class EditActivity : AppCompatActivity() {
                     val targetCode = projectDao?.insertTarget(newTarget)?.toInt() // 새로운 목표값 DB 삽입 후 생성된 목표 코드 반환
                     val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout) // 일정 레이아웃 객체
 
-                    // 기존 일정은 수정, 새로운 일정은 삽입
                     for(j in 0 until todoLayout.childCount){
                         val todoBlock = todoLayout.getChildAt(j)
                         val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list).text.toString() // 일정 내용 칸에 적힌 문자열
                         val newTodo = TodoEntity(0, targetCode!!, todoDetail, 0)
                         projectDao?.insertTodo(newTodo) // 새로운 일정값 DB 삽입
                     }
+                    projectDao?.editTargetTodoCount(targetCode!!, todoLayout.childCount) // 일정 블록 개수를 목표TB의 todo_count에 UPDATE
                 }
             }.start()
 

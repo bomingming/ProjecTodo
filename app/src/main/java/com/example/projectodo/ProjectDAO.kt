@@ -55,17 +55,9 @@ interface ProjectDAO {
     @Query("DELETE FROM project WHERE project_code = :projectCode")
     fun deleteProject(projectCode: Int)
 
-    /*// 목표 삭제
-    @Query("DELETE FROM target WHERE target_code = :targetCode")
-    fun deleteTarget(targetCode: Int)*/
-
     // 프로젝트 코드 기준 목표 전부 삭제
     @Query("DELETE FROM target WHERE project_code_for = :projectCode")
     fun deleteTarget(projectCode: Int)
-
-    /*// 일정 삭제
-    @Query("DELETE FROM todo WHERE todo_code = :todoCode")
-    fun deleteTodo(todoCode: Int)*/
 
     // 프로젝트 수정
     @Query("UPDATE project SET project_title = :projectTitle, start_day = :startDay, end_day = :endDay WHERE project_code = :projectCode")
@@ -74,6 +66,10 @@ interface ProjectDAO {
     // 목표 수정 (!!!!!일정 개수는 추후 수정 필요!!!!!)
     @Query("UPDATE target SET target_title = :targetTitle, todo_count = :todoCount WHERE target_code = :targetCode")
     fun editTarget(targetCode: Int, targetTitle: String, todoCount: Int)
+
+    // 목표 TB에 일정 개수 수정
+    @Query("UPDATE target SET todo_count = :todoCount WHERE target_code = :targetCode")
+    fun editTargetTodoCount(targetCode:Int, todoCount: Int)
 
     // 일정 수정
     @Query("UPDATE todo SET todo_detail = :todoDetail WHERE todo_code = :todoCode")
