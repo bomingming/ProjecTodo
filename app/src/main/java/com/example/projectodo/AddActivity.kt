@@ -78,6 +78,7 @@ class AddActivity : AppCompatActivity() {
                        val todoEntity = TodoEntity(0, targetCode!!.toInt(), todoDetail.text.toString(), 0)
                        projectDao?.insertTodo(todoEntity)
                     }
+                    projectDao?.editTargetTodoCount(targetCode!!.toInt(), todoLayout.childCount) // 목표별 일정 개수 목표TB에 UPDATE
                 }
 
                 runOnUiThread{
