@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/lightpink"
         android:inputType="text"
+        android:maxLength="33"
         android:textCursorDrawable="@color/lightpink"
         app:layout_constraintStart_toEndOf="@+id/todo_check"
         app:layout_constraintTop_toBottomOf="@+id/todo_add_btn" />
