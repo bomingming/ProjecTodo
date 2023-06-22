@@ -139,6 +139,7 @@ class DetailActivity : AppCompatActivity() {
                                 if(itemTodo != null){
                                     for(j in 0 until itemTodo!!.size){
                                         val tdBlockDetailLayout = inflater.inflate(R.layout.todo_block_detail, null)
+                                        val todoLayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                                         val item_for_todo = itemTodo[j]
 
                                         val checkbox = tdBlockDetailLayout.findViewById<CheckBox>(R.id.todo_check_detail)
@@ -154,6 +155,8 @@ class DetailActivity : AppCompatActivity() {
                                         if(tdBlockDetailLayout.parent != null){
                                             (tdBlockDetailLayout.parent as ViewGroup).removeView(tdBlockDetailLayout)
                                         }
+                                        todoLayoutParams.setMargins(0, 0, 0, 10)
+                                        tdBlockDetailLayout.layoutParams = todoLayoutParams
                                         tdBlockDetailParentLayout.addView(tdBlockDetailLayout) // 일정 블록 추가
                                     }
                                 }
