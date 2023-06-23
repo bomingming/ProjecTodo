@@ -1,22 +1,16 @@
 package com.example.projectodo
 
-import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.setMargins
 import com.example.projectodo.databinding.ActivityDetailBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import java.nio.file.Files.size
-import java.util.concurrent.ThreadPoolExecutor
 
 class DetailActivity : AppCompatActivity() {
 
@@ -96,8 +90,6 @@ class DetailActivity : AppCompatActivity() {
         val database = AppDatabase.getInstance(this)
         val projectDao = database?.projectDAO()
 
-        val progressIntent: Intent = Intent(this, ProgressPopupActivity::class.java) // 진행률 상세 화면 인텐트
-
         // 프로젝트 코드를 기준으로 DB에서 값 받아오기
         val projectCode_detail = intent.getIntExtra("프로젝트 코드", 0)
 
@@ -142,6 +134,7 @@ class DetailActivity : AppCompatActivity() {
                             runOnUiThread{
                                 val targetBlockLayout = parentLayout.getChildAt(i) as ConstraintLayout
                                 val tdBlockDetailParentLayout = targetBlockLayout.findViewById<LinearLayout>(R.id.td_block_detail_layout)
+
                                 tdBlockDetailParentLayout.removeAllViews() // 일정 레이아웃 초기화
 
                                 if(itemTodo != null){
@@ -180,6 +173,9 @@ class DetailActivity : AppCompatActivity() {
                                 }else{
                                     progressList.add(0) // 0을 목록에 추가
                                 }
+                                // 프로젝트 진행률 구하여 프로그레스바와 퍼센트에 출력 (알고리즘 : 진행률합 / 2(Thread 때문에 중복되므로) / 목표 개수 )
+                                binding.progressBarDetail.progress = progressList.sum()/2/itemTarget.size
+                                binding.progressPerDetail.setText("${progressList.sum()/2/itemTarget.size}%")
                             }
                         }.start()
                     }
@@ -187,5 +183,4 @@ class DetailActivity : AppCompatActivity() {
             }
         }.start()
     }
-
 }
