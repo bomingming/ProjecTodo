@@ -32,6 +32,9 @@ class DetailActivity : AppCompatActivity() {
     // 일정 코드 리스트
     private var todoCodeList = mutableListOf<Int>()
 
+    // 진행률 리스트
+    private var progressList = mutableListOf<Int>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -54,9 +57,10 @@ class DetailActivity : AppCompatActivity() {
 
         // 진행률 더보기 버튼 클릭 이벤트
         binding.progressMoreBtn.setOnClickListener {
-            //showPopup(projectCode_delete)
             val progressIntent: Intent = Intent(this, ProgressPopupActivity::class.java) // 진행률 상세 화면 인텐트
             progressIntent.putExtra("프로젝트 코드", projectCode_delete) // 프로젝트 코드 전달
+            val progressArray = ArrayList(progressList)
+            progressIntent.putIntegerArrayListExtra("진행률 목록", progressArray)
             startActivity(progressIntent) // 진행률 화면 띄우기
         }
     }
@@ -92,6 +96,8 @@ class DetailActivity : AppCompatActivity() {
         val database = AppDatabase.getInstance(this)
         val projectDao = database?.projectDAO()
 
+        val progressIntent: Intent = Intent(this, ProgressPopupActivity::class.java) // 진행률 상세 화면 인텐트
+
         // 프로젝트 코드를 기준으로 DB에서 값 받아오기
         val projectCode_detail = intent.getIntExtra("프로젝트 코드", 0)
 
@@ -113,6 +119,11 @@ class DetailActivity : AppCompatActivity() {
                         val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                         val item = itemTarget[i]
                         val targetCode = item.target_code // 목표 코드(일정을 불러오기 위해 할당)
+
+                        // 진행률 시도
+                        var endCheckCount = 0
+                        var result : Double
+                        var todoCount = item.todo_count
 
                         if(view.parent != null){
                             (view.parent as ViewGroup).removeView(view)
@@ -159,8 +170,15 @@ class DetailActivity : AppCompatActivity() {
                                         // DB에서 해당 일정의 완료여부 가져오기
                                         if(item_for_todo.end_check == 1){ // 완료 여부가 1인 경우
                                             tdBlockDetailLayout.findViewById<CheckBox>(R.id.todo_check_detail).isChecked = true // 체크박스 체크
+                                            endCheckCount = endCheckCount +1
                                         }
                                     }
+                                }
+                                if(todoCount != 0){
+                                    result = endCheckCount.toDouble()/todoCount.toDouble()*100 // 목표별 진행률 계산
+                                    progressList.add(result.toInt()) // 결과값 목록에 추가
+                                }else{
+                                    progressList.add(0) // 0을 목록에 추가
                                 }
                             }
                         }.start()

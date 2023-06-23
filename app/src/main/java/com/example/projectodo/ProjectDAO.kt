@@ -47,6 +47,10 @@ interface ProjectDAO {
      @Query("SELECT * FROM target WHERE project_code_for = :projectCode")
      fun getTargetByCode(projectCode: Int): List<TargetEntity>
 
+     // 해당 프로젝트의 목표 이름 가져오기
+     @Query("SELECT target_title FROM target WHERE project_code_for = :projectCode")
+     fun getTargetTitle(projectCode: Int) : List<String>
+
      // 해당 목표의 일정 정보 가져오기
      @Query("SELECT * FROM todo WHERE target_code_for = :targetCode")
      fun getTodoByCode(targetCode: Int) : List<TodoEntity>

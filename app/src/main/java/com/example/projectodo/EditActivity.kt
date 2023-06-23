@@ -237,7 +237,7 @@ class EditActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener{dialog, which ->
                 (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
-            })//.setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
+            }).setNegativeButton("취소", DialogInterface.OnClickListener{dialog, which ->  })
             builder.show()
         }
 
