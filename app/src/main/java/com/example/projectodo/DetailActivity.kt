@@ -72,6 +72,7 @@ class DetailActivity : AppCompatActivity() {
 
         // 프로젝트 코드를 기준으로 DB에서 값 받아오기
         val projectCode_detail = intent.getIntExtra("프로젝트 코드", 0)
+        progressList.clear()
 
         Thread{
             val project = projectDao?.getProjectByCode(projectCode_detail) // 프로젝트 코드로 프로젝트 값 받아오기
@@ -166,9 +167,16 @@ class DetailActivity : AppCompatActivity() {
                                 }else{
                                     progressList.add(0) // 0을 목록에 추가
                                 }
-                                // 프로젝트 진행률 구하여 프로그레스바와 퍼센트에 출력 (알고리즘 : 진행률합 / 2(Thread 때문에 중복되므로) / 목표 개수 )
-                                binding.progressBarDetail.progress = progressList.sum()/2/itemTarget.size
-                                binding.progressPerDetail.setText("${progressList.sum()/2/itemTarget.size}%")
+
+                                // onResume() 내부 호출의 경우 progressList가 중복되지 않으므로 " / 2 "를 제거하고 계산
+                                if(progressList.size.equals(itemTarget.size)){
+                                    binding.progressBarDetail.progress = progressList.sum()/itemTarget.size
+                                    binding.progressPerDetail.setText("${progressList.sum()/itemTarget.size}%")
+                                }else{
+                                    // 프로젝트 진행률 구하여 프로그레스바와 퍼센트에 출력 (알고리즘 : 진행률합 / 2(Thread 때문에 중복되므로) / 목표 개수 )
+                                    binding.progressBarDetail.progress = progressList.sum()/2/itemTarget.size
+                                    binding.progressPerDetail.setText("${progressList.sum()/2/itemTarget.size}%")
+                                }
                             }
                         }.start()
                     }
