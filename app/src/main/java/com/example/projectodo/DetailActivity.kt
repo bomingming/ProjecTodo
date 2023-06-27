@@ -66,26 +66,6 @@ class DetailActivity : AppCompatActivity() {
         refreshDetail(binding)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        /*Thread{
-            val database = AppDatabase.getInstance(this)
-            val projectDao = database?.projectDAO()
-
-            // 체크박스 완료 체크 여부 확인
-            for (index in 0..checkBoxList.size-1) {
-                if (checkBoxList[index].isChecked) {
-                    // DB에 완료 값 저장(1)
-                    projectDao?.editTodoCheck(todoCodeList[index], 1)
-                } else {
-                    // DB에 미완료 값 저장(0)
-                    projectDao?.editTodoCheck(todoCodeList[index], 0)
-                }
-            }
-        }.start()*/
-    }
-
     private fun refreshDetail(binding: ActivityDetailBinding){
         val database = AppDatabase.getInstance(this)
         val projectDao = database?.projectDAO()
