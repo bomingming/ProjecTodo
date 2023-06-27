@@ -28,7 +28,7 @@ class ProgressPopupActivity : AppCompatActivity() {
         val parentLayout = findViewById<LinearLayout>(R.id.progress_layout) // 레이아웃 객체 연결
         val progressList = intent.getIntegerArrayListExtra("진행률 목록") // 상세화면으로부터 진행률 목록 받아오기
 
-        getTarget(projectCode){ targetCount, test->
+        getTarget(projectCode){ targetCount, targetTitle->
             for(i in 0 until targetCount){ // 목표 개수만큼 반복
                 val progressView = layoutInflater.inflate(R.layout.progressbar, null)
 
@@ -41,7 +41,7 @@ class ProgressPopupActivity : AppCompatActivity() {
 
                 progressBar.progress = progressList!!.get(i) // 진행률을 목록의 값으로 동적 출력
                 progressText.setText("${progressList.get(i)}%") // 진행률을 텍스트로 동적 출력
-                progressTitle.setText(test.get(i)) // 목표 이름을 동적 출력
+                progressTitle.setText(targetTitle.get(i)) // 목표 이름을 동적 출력
 
                 parentLayout.addView(progressView) // 목표 개수만큼 프로그레스바 동적 출력
 
@@ -58,11 +58,11 @@ class ProgressPopupActivity : AppCompatActivity() {
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
             val targets = projectDao?.getTargetByCode(projectCode) // 프로젝트 코드로 목표 받아오기
-            val test = projectDao?.getTargetTitle(projectCode)
+            val targetTitle = projectDao?.getTargetTitle(projectCode)
 
             runOnUiThread{
                 val targetCount = targets?.size // 해당 프로젝트의 목표 개수
-                callback(targetCount?: 0, test!!)
+                callback(targetCount?: 0, targetTitle!!)
             }
         }.start()
     }

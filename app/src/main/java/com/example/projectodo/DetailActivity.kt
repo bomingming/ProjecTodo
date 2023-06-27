@@ -69,7 +69,7 @@ class DetailActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        Thread{
+        /*Thread{
             val database = AppDatabase.getInstance(this)
             val projectDao = database?.projectDAO()
 
@@ -83,7 +83,7 @@ class DetailActivity : AppCompatActivity() {
                     projectDao?.editTodoCheck(todoCodeList[index], 0)
                 }
             }
-        }.start()
+        }.start()*/
     }
 
     private fun refreshDetail(binding: ActivityDetailBinding){
@@ -164,6 +164,19 @@ class DetailActivity : AppCompatActivity() {
                                         if(item_for_todo.end_check == 1){ // 완료 여부가 1인 경우
                                             tdBlockDetailLayout.findViewById<CheckBox>(R.id.todo_check_detail).isChecked = true // 체크박스 체크
                                             endCheckCount = endCheckCount +1
+                                        }
+
+                                        // 체크박스 체크 이벤트
+                                        tdBlockDetailLayout.findViewById<CheckBox>(R.id.todo_check_detail).setOnCheckedChangeListener { buttonView, isChecked ->
+                                            if(isChecked){ // 체크박스가 체크된 경우
+                                                Thread{
+                                                    projectDao?.editTodoCheck(item_for_todo.todo_code, 1) // DB의 완료값 1로 변경
+                                                }.start()
+                                            }else{ // 체크 해제 된 경우
+                                                Thread{
+                                                    projectDao?.editTodoCheck(item_for_todo.todo_code, 0) // DB의 완료값 0으로 변경
+                                                }.start()
+                                            }
                                         }
                                     }
                                 }
