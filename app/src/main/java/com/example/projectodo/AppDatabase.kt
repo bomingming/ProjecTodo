@@ -5,8 +5,10 @@ import androidx.room.Database
 import androidx.room.Entity
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = arrayOf(ProjectEntity::class, TargetEntity::class, TodoEntity::class), version = 1)
+@Database(entities = arrayOf(ProjectEntity::class, TargetEntity::class, TodoEntity::class), version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun projectDAO() : ProjectDAO
 
@@ -14,12 +16,13 @@ abstract class AppDatabase : RoomDatabase() {
         var instance: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase?{
-            if(instance == null){
-                synchronized(AppDatabase::class){
-                    instance = Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "roomTestDB").build()
+            return instance ?: synchronized(this){
+                val migration2 = object : Migration(1, 2){
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                    }
                 }
+                instance ?: Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "roomTestDB").fallbackToDestructiveMigration().build().also { instance = it }
             }
-            return instance
         }
     }
 }

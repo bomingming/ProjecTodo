@@ -10,7 +10,8 @@ data class ProjectEntity (
     @PrimaryKey(autoGenerate = true) val project_code: Int,
     val project_title: String,
     val start_day: String,
-    val end_day: String
+    val end_day: String,
+    val pj_progress : Int = 0
     )
 
 // target 테이블

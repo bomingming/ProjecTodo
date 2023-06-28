@@ -67,7 +67,11 @@ interface ProjectDAO {
     @Query("UPDATE project SET project_title = :projectTitle, start_day = :startDay, end_day = :endDay WHERE project_code = :projectCode")
     fun editProject(projectCode: Int, projectTitle: String, startDay: String, endDay: String)
 
-    // 목표 수정 (!!!!!일정 개수는 추후 수정 필요!!!!!)
+    // 프로젝트 진행률 수정
+    @Query("UPDATE project SET pj_progress = :pjProgress WHERE project_code = :projectCode")
+    fun editPJProgress(projectCode: Int, pjProgress : Int)
+
+    // 목표 수정
     @Query("UPDATE target SET target_title = :targetTitle, todo_count = :todoCount WHERE target_code = :targetCode")
     fun editTarget(targetCode: Int, targetTitle: String, todoCount: Int)
 

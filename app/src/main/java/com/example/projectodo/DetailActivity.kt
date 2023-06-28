@@ -51,7 +51,7 @@ class DetailActivity : AppCompatActivity() {
 
         // 진행률 더보기 버튼 클릭 이벤트
         binding.progressMoreBtn.setOnClickListener {
-            val progressIntent: Intent = Intent(this, ProgressPopupActivity::class.java) // 진행률 상세 화면 인텐트
+            val progressIntent = Intent(this, ProgressPopupActivity::class.java) // 진행률 상세 화면 인텐트
             progressIntent.putExtra("프로젝트 코드", projectCode_delete) // 프로젝트 코드 전달
             val progressArray = ArrayList(progressList)
             progressIntent.putIntegerArrayListExtra("진행률 목록", progressArray)
@@ -170,18 +170,28 @@ class DetailActivity : AppCompatActivity() {
 
                                 // onResume() 내부 호출의 경우 progressList가 중복되지 않으므로 " / 2 "를 제거하고 계산
                                 if(progressList.size.equals(itemTarget.size)){
-                                    binding.progressBarDetail.progress = progressList.sum()/itemTarget.size
-                                    binding.progressPerDetail.setText("${progressList.sum()/itemTarget.size}%")
+                                    val progress = progressList.sum()/itemTarget.size
+                                    updatePJProgress(projectCode_detail, progress)
                                 }else{
                                     // 프로젝트 진행률 구하여 프로그레스바와 퍼센트에 출력 (알고리즘 : 진행률합 / 2(Thread 때문에 중복되므로) / 목표 개수 )
-                                    binding.progressBarDetail.progress = progressList.sum()/2/itemTarget.size
-                                    binding.progressPerDetail.setText("${progressList.sum()/2/itemTarget.size}%")
+                                    val progress = progressList.sum()/2/itemTarget.size
+                                    updatePJProgress(projectCode_detail, progress)
                                 }
                             }
                         }.start()
                     }
                 }
             }
+        }.start()
+    }
+
+    // 프로젝트 진행률 DB값 업데이트
+    fun updatePJProgress(projectCode: Int, progress: Int){
+        Thread{
+            val database = AppDatabase.getInstance(this)
+            val projectDao = database?.projectDAO()
+            // 프로젝트 테이블에서 프로젝트의 진행률 값 업데이트
+            projectDao?.editPJProgress(projectCode, progress)
         }.start()
     }
 }
