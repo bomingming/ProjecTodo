@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var dynamicTitle : TextView? = null // 프로젝트 제목
     private var dynamicDate : TextView? = null // 프로젝트 기간
     private var dynamicProgress : TextView? = null // 프로젝트 진행률
+    private lateinit var dynamicProgressBar : ProgressBar
 
     lateinit var database: AppDatabase
     var projectList = listOf<ProjectEntity>()
@@ -104,10 +106,12 @@ class MainActivity : AppCompatActivity() {
                         dynamicTitle = view.findViewById(R.id.proj_title)
                         dynamicDate = view.findViewById(R.id.proj_date)
                         dynamicProgress = view.findViewById(R.id.progress_per_main)
+                        dynamicProgressBar = view.findViewById(R.id.progressBar_main)
 
                         dynamicTitle?.text = item.project_title
                         dynamicDate?.text = "${item.start_day}~${item.end_day}"
 
+                        dynamicProgressBar.progress = item.pj_progress
                         dynamicProgress?.text = "${item.pj_progress}%"
 
                     }
