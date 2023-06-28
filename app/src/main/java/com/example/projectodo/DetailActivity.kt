@@ -81,6 +81,8 @@ class DetailActivity : AppCompatActivity() {
             runOnUiThread{
                 binding.titleText.text = project?.project_title // 프로젝트 제목
                 binding.projDatePeriod.text = "${project?.start_day} ~ ${project?.end_day}" // 프로젝트 기간
+                binding.progressBarDetail.progress = project!!.pj_progress // 프로그레스바
+                binding.progressPerDetail.setText("${project?.pj_progress}%") // 진행률 수치
 
                 // 목표 블록
                 val parentLayout = findViewById<LinearLayout>(R.id.tg_block_detail_layout) // 레이아웃 객체 연결
