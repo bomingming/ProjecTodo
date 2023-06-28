@@ -63,7 +63,7 @@ class AddActivity : AppCompatActivity() {
             val startDate = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).parse(binding.startDateText.text.toString())
             val startDateInMillis = startDate?.time?:0
             val datePickerDialog = DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
-            datePickerDialog.datePicker.minDate = startDateInMillis
+            datePickerDialog.datePicker.minDate = startDateInMillis // 마감일 범위 지정
             datePickerDialog.show()
         }
 

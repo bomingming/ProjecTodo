@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.projectodo.databinding.ActivityDetailBinding
 import com.example.projectodo.databinding.ActivityEditBinding
+import java.text.SimpleDateFormat
 import java.util.*
 
 class EditActivity : AppCompatActivity() {
@@ -39,6 +40,8 @@ class EditActivity : AppCompatActivity() {
         var startDateString = "" // 시작일
         var endDateString = "" // 마감일
 
+        var isStartDateSelected = false // 시작일이 설정되었는지 체크
+
         openEdit(binding) // 수정 화면에 데이터 구성
 
         // 시작일 버튼 이벤트
@@ -47,6 +50,7 @@ class EditActivity : AppCompatActivity() {
             val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                 startDateString = "${year}년 ${month+1}월 ${dayOfMonth}일"
                 binding.startDateText.setText(startDateString)
+                isStartDateSelected = true // 시작일이 선택되었으므로 true
             }
             DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(
                 Calendar.DAY_OF_MONTH)).show()
@@ -54,13 +58,21 @@ class EditActivity : AppCompatActivity() {
 
         // 마감일 버튼 이벤트
         binding.endDateBtn.setOnClickListener {
+            if(!isStartDateSelected){
+                // 시작일 선택되지 않은 경우 마감일 버튼 이벤트 처리 X
+                Toast.makeText(this, "시작일을 먼저 선택해주세요", Toast.LENGTH_SHORT).show() // 시작일 먼저 선택하라는 메시지 출력
+                return@setOnClickListener
+            }
             val cal = Calendar.getInstance()
             val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                 endDateString = "${year}년 ${month+1}월 ${dayOfMonth}일"
                 binding.endDateText.setText(endDateString)
             }
-            DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(
-                Calendar.DAY_OF_MONTH)).show()
+            val startDate = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA).parse(binding.startDateText.text.toString())
+            val startDateInMillis = startDate?.time?:0
+            val datePickerDialog = DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+            datePickerDialog.datePicker.minDate = startDateInMillis // 마감일 범위 지정
+            datePickerDialog.show()
         }
 
         // 수정 버튼 이벤트
