@@ -69,42 +69,62 @@ class AddActivity : AppCompatActivity() {
 
         // 등록 버튼 이벤트
         binding.regisBtn.setOnClickListener {
+            // 목표 제목이 비었는지 확인하는 변수
+            var targetTitleIsEmpty = false
+            
             if(binding.titleEdit.text.isEmpty()){ // 프로젝트 제목이 비어있는 경우
                 Toast.makeText(this, "프로젝트 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
             }else{ // 프로젝트 제목이 입력된 경우
-                // DB에 값 넣기
-                Thread{
-                    val database = AppDatabase.getInstance(this)
-                    val projectDao = database?.projectDAO()
-                    val projectTB = ProjectEntity(0, binding.titleEdit.text.toString(), binding.startDateText.text.toString(), binding.endDateText.text.toString())
-                    val projectCode = projectDao?.insertProject(projectTB) // DB에 프로젝트 추가
+                for(i in 0 until binding.tgBlockAddLayout.childCount){
+                    val targetBlock = binding.tgBlockAddLayout.getChildAt(i) as ConstraintLayout
+                    val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title)
+                    if(targetTitle.text.isEmpty()){
+                        targetTitleIsEmpty = true
+                    }
+                }
+                // 목표 중 제목이 빈 목표가 있는 경우
+                if(targetTitleIsEmpty){
+                    Toast.makeText(this, "목표 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
+                }else{ // 목표 제목이 모두 입력된 경우
+                    // DB에 값 넣기
+                    Thread{
+                        val database = AppDatabase.getInstance(this)
+                        val projectDao = database?.projectDAO()
+                        val projectTB = ProjectEntity(0, binding.titleEdit.text.toString(), binding.startDateText.text.toString(), binding.endDateText.text.toString())
+                        val projectCode = projectDao?.insertProject(projectTB) // DB에 프로젝트 추가
 
-                    // 목표 데이터 DB에 넣기
-                    for(i in 0 until binding.tgBlockAddLayout.childCount){
-                        val targetBlock = binding.tgBlockAddLayout.getChildAt(i) as ConstraintLayout
-                        val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title)
+                        // 목표 데이터 DB에 넣기
+                        for(i in 0 until binding.tgBlockAddLayout.childCount){
+                            val targetBlock = binding.tgBlockAddLayout.getChildAt(i) as ConstraintLayout
+                            val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title)
 
-                        // DB에 프로젝트 저장 후 해당 기본키 목표 블록의 외래키로 할당
-                        val targetEntity = TargetEntity(0,  projectCode!!.toInt(), targetTitle.text.toString(), 0)
-                        val targetCode = projectDao?.insertTarget(targetEntity) // DB에 목록 추가
+                            if(targetTitle.text.isEmpty()){
+                                runOnUiThread{
+                                    Toast.makeText(this, "목표 제목을 입력해주세요",Toast.LENGTH_SHORT).show() // 토스트 메시지 출력
+                                }
+                            }else{
+                                // DB에 프로젝트 저장 후 해당 기본키 목표 블록의 외래키로 할당
+                                val targetEntity = TargetEntity(0,  projectCode!!.toInt(), targetTitle.text.toString(), 0)
+                                val targetCode = projectDao?.insertTarget(targetEntity) // DB에 목록 추가
 
-                        // 일정 데이터 DB에 넣기기
-                        val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout)
-                        for(j in 0 until todoLayout.childCount){
-                            val todoBlock = todoLayout.getChildAt(j) as LinearLayout
-                            val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list)
-                            val todoEntity = TodoEntity(0, targetCode!!.toInt(), todoDetail.text.toString(), 0)
-                            projectDao?.insertTodo(todoEntity)
+                                // 일정 데이터 DB에 넣기기
+                                val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout)
+                                for(j in 0 until todoLayout.childCount){
+                                    val todoBlock = todoLayout.getChildAt(j) as LinearLayout
+                                    val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list)
+                                    val todoEntity = TodoEntity(0, targetCode!!.toInt(), todoDetail.text.toString(), 0)
+                                    projectDao?.insertTodo(todoEntity)
+                                }
+                                projectDao?.editTargetTodoCount(targetCode!!.toInt(), todoLayout.childCount) // 목표별 일정 개수 목표TB에 UPDATE
+                            }
                         }
-                        projectDao?.editTargetTodoCount(targetCode!!.toInt(), todoLayout.childCount) // 목표별 일정 개수 목표TB에 UPDATE
-                    }
+                        runOnUiThread{
+                            Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show() // 토스트 메시지 출력
+                        }
+                    }.start()
 
-                    runOnUiThread{
-                    }
-                }.start()
-                Toast.makeText(this, "프로젝트가 등록되었습니다",Toast.LENGTH_SHORT).show() // 토스트 메시지 출력
-
-                finish() // 등록 화면 종료
+                    finish() // 등록 화면 종료
+                }
             }
         }
 
