@@ -77,9 +77,25 @@ class EditActivity : AppCompatActivity() {
 
         // 수정 버튼 이벤트
         binding.regisBtn.setOnClickListener {
+            // 목표 제목이 비었는지 확인하는 변수
+            var targetTitleIsEmpty = false
+
             if(binding.titleEdit.text.isEmpty()){
                 Toast.makeText(this, "프로젝트 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
             }else{
+                for(i in 0 until binding.tgBlockEidtLayout.childCount){
+                    val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) as ConstraintLayout
+                    val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title)
+                    if(targetTitle.text.isEmpty()){
+                        targetTitleIsEmpty = true
+                    }
+                }
+                // 목표 중 제목이 빈 목표가 있는 경우
+                if(targetTitleIsEmpty){
+                    Toast.makeText(this, "목표 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
+                }else{
+
+                }
                 val projectCode = intent.getIntExtra("프로젝트 코드_for수정", 0)
                 val newTitle = binding.titleEdit.text.toString()
                 val newStart = binding.startDateText.text.toString()
