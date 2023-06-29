@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.LinearLayout
@@ -36,6 +38,9 @@ class DetailActivity : AppCompatActivity() {
 
         val projectCode_delete = intent.getIntExtra("프로젝트 코드", 0)
 
+        // 최상위 뷰
+        val rootView = findViewById<View>(android.R.id.content)
+
         // DB에서 값 불러와 데이터 출력
         refreshDetail(binding)
 
@@ -57,6 +62,19 @@ class DetailActivity : AppCompatActivity() {
             progressIntent.putIntegerArrayListExtra("진행률 목록", progressArray)
             startActivity(progressIntent) // 진행률 화면 띄우기
         }
+
+        // 도움말 버튼 클릭 시 말풍선 출력
+        binding.helpBtn.setOnClickListener {
+            binding.helpText.visibility = View.VISIBLE
+            binding.helpTail.visibility = View.VISIBLE
+        }
+
+        // 화면 아무데나 클릭 시 말풍선 사라짐
+        rootView.setOnClickListener{
+            binding.helpText.visibility = View.GONE
+            binding.helpTail.visibility = View.GONE
+        }
+
     }
 
     override fun onResume() {

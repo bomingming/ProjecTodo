@@ -5,7 +5,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailActivity">
+    tools:context=".DetailActivity"
+    android:id="@+id/detail_view">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -23,33 +24,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"/>
-
-            <ImageButton
-                android:id="@+id/help_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@color/white"
-                android:scaleType="fitCenter"
-                android:src="@drawable/help_icon"
-                app:layout_constraintBottom_toBottomOf="@+id/more_btn"
-                app:layout_constraintEnd_toStartOf="@+id/more_btn"
-                app:layout_constraintTop_toTopOf="@+id/more_btn" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/balloon_background"
-                android:text="야야야야야ㅑ야야양"
-                app:layout_constraintEnd_toEndOf="@+id/more_btn"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/balloon_tail"
-                app:layout_constraintEnd_toStartOf="@+id/more_btn"
-                app:layout_constraintTop_toBottomOf="@+id/help_btn" />
 
             <TextView
                 android:id="@+id/title_text"
@@ -124,6 +98,37 @@
                 app:layout_constraintBottom_toBottomOf="@+id/progress_per_detail"
                 app:layout_constraintStart_toEndOf="@+id/progress_per_detail"
                 app:layout_constraintTop_toTopOf="@+id/progress_per_detail" />
+            <ImageButton
+                android:id="@+id/help_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@color/white"
+                android:scaleType="fitCenter"
+                android:src="@drawable/help_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/more_btn"
+                app:layout_constraintEnd_toStartOf="@+id/more_btn"
+                app:layout_constraintTop_toTopOf="@+id/more_btn" />
+
+            <ImageView
+                android:id="@+id/help_tail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/balloon_tail"
+                app:layout_constraintEnd_toStartOf="@+id/more_btn"
+                app:layout_constraintTop_toBottomOf="@+id/help_btn"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/help_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/balloon_background"
+                android:text="프로젝트 진행률은 목표별 진행률을 기반으로 합니다.\n
+(일정은 속한 목표에 따라 가중치가 다를 수 있습니다)"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="@+id/more_btn"
+                app:layout_constraintTop_toBottomOf="@+id/help_tail"
+                android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
