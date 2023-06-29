@@ -77,36 +77,40 @@ class EditActivity : AppCompatActivity() {
 
         // 수정 버튼 이벤트
         binding.regisBtn.setOnClickListener {
-            val projectCode = intent.getIntExtra("프로젝트 코드_for수정", 0)
-            val newTitle = binding.titleEdit.text.toString()
-            val newStart = binding.startDateText.text.toString()
-            val newEnd = binding.endDateText.text.toString()
-            editProjectFromDB(projectCode, newTitle, newStart, newEnd) // 프로젝트 DB값 UPDATE
+            if(binding.titleEdit.text.isEmpty()){
+                Toast.makeText(this, "프로젝트 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
+            }else{
+                val projectCode = intent.getIntExtra("프로젝트 코드_for수정", 0)
+                val newTitle = binding.titleEdit.text.toString()
+                val newStart = binding.startDateText.text.toString()
+                val newEnd = binding.endDateText.text.toString()
+                editProjectFromDB(projectCode, newTitle, newStart, newEnd) // 프로젝트 DB값 UPDATE
 
-            Thread{
-                val database = AppDatabase.getInstance(this)
-                val projectDao = database?.projectDAO()
-                projectDao?.deleteTarget(projectCode )// DB에서 해당 프로젝트의 모든 목표 값 삭제
+                Thread{
+                    val database = AppDatabase.getInstance(this)
+                    val projectDao = database?.projectDAO()
+                    projectDao?.deleteTarget(projectCode )// DB에서 해당 프로젝트의 모든 목표 값 삭제
 
-                for(i in 0 until binding.tgBlockEidtLayout.childCount){
-                    val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) // 목표 블록 객체
-                    val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title).text.toString() // 목표 이름 칸에 적힌 문자열
-                    val newTarget = TargetEntity(0, projectCode, targetTitle, 0) // 새로운 목표 객체
-                    val targetCode = projectDao?.insertTarget(newTarget)?.toInt() // 새로운 목표값 DB 삽입 후 생성된 목표 코드 반환
-                    val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout) // 일정 레이아웃 객체
+                    for(i in 0 until binding.tgBlockEidtLayout.childCount){
+                        val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) // 목표 블록 객체
+                        val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title).text.toString() // 목표 이름 칸에 적힌 문자열
+                        val newTarget = TargetEntity(0, projectCode, targetTitle, 0) // 새로운 목표 객체
+                        val targetCode = projectDao?.insertTarget(newTarget)?.toInt() // 새로운 목표값 DB 삽입 후 생성된 목표 코드 반환
+                        val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout) // 일정 레이아웃 객체
 
-                    for(j in 0 until todoLayout.childCount){
-                        val todoBlock = todoLayout.getChildAt(j)
-                        val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list).text.toString() // 일정 내용 칸에 적힌 문자열
-                        val newTodo = TodoEntity(0, targetCode!!, todoDetail, 0)
-                        projectDao?.insertTodo(newTodo) // 새로운 일정값 DB 삽입
+                        for(j in 0 until todoLayout.childCount){
+                            val todoBlock = todoLayout.getChildAt(j)
+                            val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list).text.toString() // 일정 내용 칸에 적힌 문자열
+                            val newTodo = TodoEntity(0, targetCode!!, todoDetail, 0)
+                            projectDao?.insertTodo(newTodo) // 새로운 일정값 DB 삽입
+                        }
+                        projectDao?.editTargetTodoCount(targetCode!!, todoLayout.childCount) // 일정 블록 개수를 목표TB의 todo_count에 UPDATE
                     }
-                    projectDao?.editTargetTodoCount(targetCode!!, todoLayout.childCount) // 일정 블록 개수를 목표TB의 todo_count에 UPDATE
-                }
-            }.start()
+                }.start()
 
-            Toast.makeText(this, "프로젝트가 수정되었습니다", Toast.LENGTH_SHORT).show()
-            finish() // 수정 화면 종료
+                Toast.makeText(this, "프로젝트가 수정되었습니다", Toast.LENGTH_SHORT).show()
+                finish() // 수정 화면 종료
+            }
         }
 
         // 취소 버튼 이벤트
