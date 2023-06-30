@@ -13,6 +13,9 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+        // 초기 로딩 시 화면 없애기
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
     <!--DatePicker 테마 설정-->
     <style name="MyDatePickerStyle" parent="@android:style/Widget.DatePicker">
