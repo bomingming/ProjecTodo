@@ -32,6 +32,9 @@ class EditActivity : AppCompatActivity() {
     // 목표 코드 리스트
     private val targetCodeList: MutableList<Int> = mutableListOf()
 
+    // 목표 리스트
+    private val targetCodeMap : MutableMap<Int, MutableList<Int?>> = mutableMapOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditBinding.inflate(layoutInflater)
@@ -174,6 +177,8 @@ class EditActivity : AppCompatActivity() {
                         val item = itemTarget[i]
                         val targetCode = item.target_code // 목표 코드(일정 불러오기 위함)
 
+                        var todoCodeList : MutableList<Int?> = mutableListOf() // 일정 코드를 담을 리스트
+
                         if(view.parent != null){
                             (view.parent as ViewGroup).removeView(view)
                         }
@@ -202,10 +207,13 @@ class EditActivity : AppCompatActivity() {
 
                             // 기존 목표 블록 내부마다 동적으로 새로운 일정 블록 생성
                             view.findViewById<LinearLayout>(R.id.td_add_layout).addView(newTodoBlock)
+                            todoCodeList.add(null) // 일정 코드 리스트에 null 추가
 
                             // 기존 목표 블록 내부의 새로운 일정 삭제 버튼 이벤트
                             newDeleteBtn.setOnClickListener {
                                 view.findViewById<LinearLayout>(R.id.td_add_layout).removeView(newTodoBlock)
+                                val todoRemoveList = targetCodeMap[targetCode]
+                                todoRemoveList?.remove(null) // 일정 코드 리스트에서 null 제거
                             }
                         }
 
@@ -227,6 +235,7 @@ class EditActivity : AppCompatActivity() {
                                             (todoblock.parent as ViewGroup).removeView(todoblock)
                                         }
                                         tdBlockEditParentLayout.addView(todoblock)
+                                        todoCodeList.add(item_for_todo.todo_code) // 일정 코드를 리스트에 삽입
 
                                         dynamicTodo = todoblock.findViewById(R.id.todo_list)
                                         dynamicTodo?.text = item_for_todo.todo_detail
@@ -234,9 +243,14 @@ class EditActivity : AppCompatActivity() {
                                         // 기존 일정 블록의 삭제 버튼 이벤트
                                         todoblock.findViewById<ImageButton>(R.id.delete_todo_btn).setOnClickListener {
                                             tdBlockEditParentLayout.removeView(todoblock) // 기존 일정 블록 삭제
+                                            val todoRemoveList = targetCodeMap[targetCode] // 목표 맵 중 해당 목표 리스트
+                                            todoRemoveList?.remove(item_for_todo.todo_code) // 목표 리스트에서 일정 삭제
                                         }
                                     }
+
                                 }
+                                targetCodeMap.put(targetCode, todoCodeList) // 목표 맵에 기존 목표의 일정 값 추가
+                                Log.e("맵", targetCodeMap.toString())
                             }
                         }.start()
                     }
