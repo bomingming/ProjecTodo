@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.size
 import com.example.projectodo.databinding.ActivityDetailBinding
 import com.example.projectodo.databinding.ActivityEditBinding
 import java.text.SimpleDateFormat
@@ -33,7 +34,7 @@ class EditActivity : AppCompatActivity() {
     private val targetCodeList: MutableList<Int> = mutableListOf()
 
     // 목표 리스트
-    private val targetCodeMap : MutableMap<Int, MutableList<Int?>> = mutableMapOf()
+    private val targetCodeMap : MutableMap<Int?, MutableList<Int?>> = mutableMapOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,22 +107,31 @@ class EditActivity : AppCompatActivity() {
                     Thread{
                         val database = AppDatabase.getInstance(this)
                         val projectDao = database?.projectDAO()
-                        projectDao?.deleteTarget(projectCode )// DB에서 해당 프로젝트의 모든 목표 값 삭제
 
-                        for(i in 0 until binding.tgBlockEidtLayout.childCount){
-                            val targetBlock = binding.tgBlockEidtLayout.getChildAt(i) // 목표 블록 객체
+                        for((key, value) in targetCodeMap){
+                            val targetBlock = binding.tgBlockEidtLayout.getChildAt(targetCodeMap.keys.toList().indexOf(key)) // 목표 블록 객체
                             val targetTitle = targetBlock.findViewById<EditText>(R.id.target_title).text.toString() // 목표 이름 칸에 적힌 문자열
-                            val newTarget = TargetEntity(0, projectCode, targetTitle, 0) // 새로운 목표 객체
-                            val targetCode = projectDao?.insertTarget(newTarget)?.toInt() // 새로운 목표값 DB 삽입 후 생성된 목표 코드 반환
                             val todoLayout = targetBlock.findViewById<LinearLayout>(R.id.td_add_layout) // 일정 레이아웃 객체
-
-                            for(j in 0 until todoLayout.childCount){
-                                val todoBlock = todoLayout.getChildAt(j)
-                                val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list).text.toString() // 일정 내용 칸에 적힌 문자열
-                                val newTodo = TodoEntity(0, targetCode!!, todoDetail, 0)
-                                projectDao?.insertTodo(newTodo) // 새로운 일정값 DB 삽입
+                            if(key != null){ // 기존 목표의 경우
+                                for(element in value){ // 목표 당 일정 수만큼 반복
+                                    val todoBlock = todoLayout.getChildAt(value.indexOf(element))
+                                    val todoDetail = todoBlock.findViewById<EditText>(R.id.todo_list).text.toString() // 일정 내용 칸에 적힌 문자열
+                                    if(element != null){ // 기존 목표의 기존 일정이 수정된 경우
+                                        projectDao?.editTodo(key, todoDetail) // 일정 내용 수정
+                                    }else{ // 기존 목표에 새 일정이 추가된 경우
+                                        val newTodo = TodoEntity(0, key, todoDetail, 0)
+                                        projectDao?.insertTodo(newTodo) // 새 일정 추가
+                                    }
+                                }
+                            }else{ // 새 목표의 경우
+                                val newTarget = TargetEntity(0, projectCode, targetTitle, todoLayout.childCount) // 새로운 목표 객체
+                                val targetCode = projectDao?.insertTarget(newTarget)?.toInt() // 새로운 목표 값 DB 삽입 후 생성된 목표 코드 반환
+                                for(i in 0 until todoLayout.childCount){
+                                    val todoDetail = todoLayout.findViewById<TextView>(R.id.todo_list).text.toString()
+                                    val newTodo = TodoEntity(0, targetCode!!, todoDetail, 0)
+                                    projectDao?.insertTodo(newTodo)
+                                }
                             }
-                            projectDao?.editTargetTodoCount(targetCode!!, todoLayout.childCount) // 일정 블록 개수를 목표TB의 todo_count에 UPDATE
                         }
                         runOnUiThread {
                             Toast.makeText(this, "프로젝트가 수정되었습니다", Toast.LENGTH_SHORT).show()
@@ -196,6 +206,8 @@ class EditActivity : AppCompatActivity() {
                             val builder = AlertDialog.Builder(this)
                             builder.setMessage("목표를 삭제하시겠습니까?").setPositiveButton("삭제", DialogInterface.OnClickListener { dialog, which ->
                                 (view.parent as ViewGroup).removeView(view) // 목표 블록 삭제
+                                targetCodeMap.remove(targetCode) // 목표 맵에서 목표 삭제
+                                //Log.e("기존 목표 제거", targetCodeMap.toString())
                             }).setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->  })
                             builder.show()
                         }
@@ -208,12 +220,14 @@ class EditActivity : AppCompatActivity() {
                             // 기존 목표 블록 내부마다 동적으로 새로운 일정 블록 생성
                             view.findViewById<LinearLayout>(R.id.td_add_layout).addView(newTodoBlock)
                             todoCodeList.add(null) // 일정 코드 리스트에 null 추가
+                            //Log.e("기존 목표 블록에 새 일정 추가", targetCodeMap.toString())
 
                             // 기존 목표 블록 내부의 새로운 일정 삭제 버튼 이벤트
                             newDeleteBtn.setOnClickListener {
                                 view.findViewById<LinearLayout>(R.id.td_add_layout).removeView(newTodoBlock)
                                 val todoRemoveList = targetCodeMap[targetCode]
                                 todoRemoveList?.remove(null) // 일정 코드 리스트에서 null 제거
+                                //Log.e("기존 목표 블록에 새 일정 제거", targetCodeMap.toString())
                             }
                         }
 
@@ -236,6 +250,7 @@ class EditActivity : AppCompatActivity() {
                                         }
                                         tdBlockEditParentLayout.addView(todoblock)
                                         todoCodeList.add(item_for_todo.todo_code) // 일정 코드를 리스트에 삽입
+                                        //Log.e("기존 목표 블록에 기존 일정 불러오기", targetCodeMap.toString())
 
                                         dynamicTodo = todoblock.findViewById(R.id.todo_list)
                                         dynamicTodo?.text = item_for_todo.todo_detail
@@ -245,12 +260,12 @@ class EditActivity : AppCompatActivity() {
                                             tdBlockEditParentLayout.removeView(todoblock) // 기존 일정 블록 삭제
                                             val todoRemoveList = targetCodeMap[targetCode] // 목표 맵 중 해당 목표 리스트
                                             todoRemoveList?.remove(item_for_todo.todo_code) // 목표 리스트에서 일정 삭제
+                                            //Log.e("기존 목표 블록에 기존 일정 삭제", targetCodeMap.toString())
                                         }
                                     }
-
                                 }
                                 targetCodeMap.put(targetCode, todoCodeList) // 목표 맵에 기존 목표의 일정 값 추가
-                                Log.e("맵", targetCodeMap.toString())
+                                Log.e("현재 목표 맵", targetCodeMap.toString())
                             }
                         }.start()
                     }
@@ -277,7 +292,10 @@ class EditActivity : AppCompatActivity() {
             (view.parent as ViewGroup).removeView(view)
         }
 
+        //var todoCodeList : MutableList<Int?> = mutableListOf() // 일정 코드를 담을 리스트
         parentLayout.addView(view) // 목표 블록 추가
+        targetCodeMap.put(null, mutableListOf()) // 목표 맵에 코드가 null인 새 목표 추가
+        //Log.e("과연?", targetCodeMap.toString())
 
         // 목표 삭제 버튼 클릭 시
         deleteTartgetBtn.setOnClickListener {
@@ -317,7 +335,6 @@ class EditActivity : AppCompatActivity() {
             if(project != null){
                 projectDao?.editProject(projectCode, newTitle, newStart, newEnd) // 수정된 값을 DB에 UPDATE
             }
-
         }.start()
     }
 }
